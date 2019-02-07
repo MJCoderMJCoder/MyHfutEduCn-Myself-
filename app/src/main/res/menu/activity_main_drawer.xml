@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_course"
+            android:icon="@drawable/ic_course"
+            android:title="课程表" />
+        <item
+            android:id="@+id/nav_sign"
+            android:icon="@drawable/ic_sign"
+            android:title="课堂签到" />
+        <item
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_community"
+            android:title="社区" />
+        <item
+            android:id="@+id/nav_achievement"
+            android:icon="@drawable/ic_achievement"
+            android:title="查成绩" />
+    </group>
+
+    <item android:title="设置">
+        <menu>
+            <item
+                android:id="@+id/nav_infoset"
+                android:icon="@drawable/ic_infoset"
+                android:title="信息设置" />
+            <item
+                android:id="@+id/nav_skin"
+                android:icon="@drawable/ic_skin"
+                android:title="皮肤切换" />
+        </menu>
+    </item>
+
+</menu>
