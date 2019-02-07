@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbarTitle=   toolbar.findViewById(R.id.toolbarTitle);
-        Log.v("dsfa", toolbarTitle + "");
         toolbarTitle.setText("课程表");
         setSupportActionBar(toolbar);
 
