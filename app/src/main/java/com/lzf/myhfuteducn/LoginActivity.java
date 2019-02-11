@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                             map.put("username", username);
                             map.put("password", Base64.encodeToString(password.getBytes(), Base64.DEFAULT)); // MjUyMDE3===node.js.base64Encode
                             map.put("identity", 0 + "");
-                            final String response = OkHttpUtil.submit(UrlUtil.login, map);
+                            final String response = OkHttpUtil.submit(UrlUtil.LOGIN, map);
                             /*
                              {
                              "code": 200,
@@ -120,6 +120,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                                     LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                                     LoginActivity.this.finish();
+                                                } else {
+                                                    Toast.makeText(LoginActivity.this, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         } else {
