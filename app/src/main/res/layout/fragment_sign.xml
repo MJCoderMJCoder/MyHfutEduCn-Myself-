@@ -5,7 +5,7 @@
              android:background="@android:color/white"
              tools:context="com.lzf.myhfuteducn.fragment.SignFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- TODO: Update blank fragmitem_week_layoutyout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

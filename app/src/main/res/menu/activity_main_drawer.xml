@@ -33,7 +33,7 @@
                 <item
                     android:id="@+id/nav_skin"
                     android:icon="@drawable/ic_skin"
-                    android:title="皮肤切换"/>
+                    android:title="切换账号"/>
             </group>
         </menu>
     </item>
