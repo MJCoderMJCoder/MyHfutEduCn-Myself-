@@ -1,21 +1,25 @@
 package com.lzf.myhfuteducn.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
 import com.lzf.myhfuteducn.bean.Week;
@@ -55,6 +59,7 @@ public class CourseFragment extends Fragment {
     //    private OnFragmentInteractionListener mListener;
 
     private Context context;
+    private View view;
 
     public CourseFragment() {
     }
@@ -101,48 +106,56 @@ public class CourseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the item_week_layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_course, container, false);
-        TextView semesternameTV = view.findViewById(R.id.semesternameTV);
-        semesternameTV.setText(MainActivity.semestername);
-        Spinner weeknameS = view.findViewById(R.id.weeknameS);
-        List<Week> weekData = new ArrayList<Week>();
         try {
+            view = inflater.inflate(R.layout.fragment_course, container, false);
+            TextView semesternameTV = view.findViewById(R.id.semesternameTV);
+            semesternameTV.setText(MainActivity.semestername);
+
+            final Spinner weeknameS = view.findViewById(R.id.weeknameS);
+            view.findViewById(R.id.weeksRL).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    weeknameS.performClick();
+                }
+            });
             JSONArray semesters = MainActivity.semesterWeekList.getJSONArray("semesters");
             JSONArray weeks = semesters.getJSONObject(MainActivity.semesterorder).getJSONArray("weeks");
-            for (int i = 0; i < weeks.length(); i++) {
-                JSONObject week = weeks.getJSONObject(i);
-                weekData.add(new Week(week.getString("begin_on"), week.getString("end_on"), week.getString("index")));
-            }
-        } catch (JSONException e) {
+            final List<Week> weekData = new Gson().fromJson(weeks.toString(), new TypeToken<List<Week>>() {
+            }.getType());
+            weeknameS.setAdapter(new ReusableAdapter<Week>(weekData, R.layout.item_week) {
+                /**
+                 * 定义一个抽象方法，完成ViewHolder与相关数据集的绑定
+                 * <p>
+                 * 我们创建新的BaseAdapter的时候，实现这个方法就好，另外，别忘了把我们自定义 的BaseAdapter改成abstact抽象的！
+                 *
+                 * @param holder
+                 * @param obj
+                 */
+                @Override
+                public void bindView(ViewHolder holder, Week obj) {
+                    holder.setText(R.id.weeknameTV, "第 " + obj.getIndex() + " 周");
+                }
+            });
+            weeknameS.setSelection(MainActivity.weekIndx - 1, true);
+            weeknameS.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Week week = weekData.get(position);
+                    if (MainActivity.weekIndx != week.getIndex()) {
+                        getWeekSchedule(MainActivity.semestercode + "", week.getIndex() + "");
+                        MainActivity.weekIndx = week.getIndex();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            getWeekSchedule(MainActivity.semestercode + "", MainActivity.weekIndx + "");
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        weeknameS.setAdapter(new ReusableAdapter<Week>(weekData, R.layout.item_week) {
-            /**
-             * 定义一个抽象方法，完成ViewHolder与相关数据集的绑定
-             * <p>
-             * 我们创建新的BaseAdapter的时候，实现这个方法就好，另外，别忘了把我们自定义 的BaseAdapter改成abstact抽象的！
-             *
-             * @param holder
-             * @param obj
-             */
-            @Override
-            public void bindView(ViewHolder holder, Week obj) {
-                holder.setText(R.id.weeknameTV, "第" + obj.getIndex() + "周");
-            }
-        });
-        weeknameS.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TextView weeknameTV = (TextView) view.findViewById(R.id.weeknameTV);
-                Log.v("view", "您选择的是~：" + weeknameTV.getText().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        getWeekSchedule(MainActivity.semestercode, MainActivity.weekIndx);
         return view;
     }
 
@@ -176,7 +189,7 @@ public class CourseFragment extends Fragment {
     //    }
 
     /**
-     * 获取一周的课程表
+     * 获取一周的课程表并绘制
      *
      * @param semestercode
      * @param weekIndx
@@ -191,7 +204,7 @@ public class CourseFragment extends Fragment {
                 map.put("userKey", SharedPreferencesUtil.get(context, "userKey", "") + "");
                 map.put("projectId", SharedPreferencesUtil.get(context, "projectId0", "") + "");
                 map.put("identity", 0 + "");
-                map.put("semestercode", semestercode);
+                map.put("semestercode", (semestercode.length() < 3 ? (0 + semestercode) : semestercode));
                 map.put("weekIndx", weekIndx);
                 final String response = OkHttpUtil.submit(UrlUtil.GET_WEEK_SCHEDULE, map);
                 /*
@@ -490,17 +503,120 @@ public class CourseFragment extends Fragment {
                  }
                  */
                 getActivity().runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void run() {
                         try {
+                            int weekdayCache = 0;
+                            int unitCache = 1;
+                            View courseCardCache = null;
                             JSONObject responseJson = new JSONObject(response);
                             if (responseJson.getInt("code") == 200) {
                                 Toast.makeText(context, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
                                 JSONObject objJson = responseJson.getJSONObject("obj");
                                 if (objJson != null) {
                                     JSONArray businessDataJson = objJson.getJSONArray("business_data");
-                                    if (businessDataJson != null && businessDataJson.length() > 0) {
+                                    if (businessDataJson != null) {
+                                        LinearLayout mondayL = view.findViewById(R.id.monday);
+                                        mondayL.removeAllViews();
+                                        LinearLayout tuesdayL = view.findViewById(R.id.tuesday);
+                                        tuesdayL.removeAllViews();
+                                        LinearLayout wednesdayL = view.findViewById(R.id.wednesday);
+                                        wednesdayL.removeAllViews();
+                                        LinearLayout thursdayL = view.findViewById(R.id.thursday);
+                                        thursdayL.removeAllViews();
+                                        LinearLayout fridayL = view.findViewById(R.id.friday);
+                                        fridayL.removeAllViews();
+                                        LinearLayout saturdayL = view.findViewById(R.id.saturday);
+                                        saturdayL.removeAllViews();
+                                        LinearLayout weekdayL = view.findViewById(R.id.weekday);
+                                        wednesdayL.removeAllViews();
+                                        List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
+                                        for (int i = 0; i < businessDataJson.length(); i++) {
+                                            JSONObject jsonObject = businessDataJson.getJSONObject(i);
+                                            int weekday = jsonObject.getInt("weekday");
+                                            LinearLayout day = null;
+                                            switch (weekday) {
+                                                case 1:
+                                                    day = mondayL;
+                                                    break;
+                                                case 2:
+                                                    day = tuesdayL;
+                                                    break;
+                                                case 3:
+                                                    day = wednesdayL;
+                                                    break;
+                                                case 4:
+                                                    day = thursdayL;
+                                                    break;
+                                                case 5:
+                                                    day = fridayL;
+                                                    break;
+                                                case 6:
+                                                    day = saturdayL;
+                                                    break;
+                                                case 7:
+                                                    day = weekdayL;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                            if (day != null) {
+                                                int start_unit = jsonObject.getInt("start_unit");
+                                                if (weekdayCache != weekday) {
+                                                    unitCache = 1;
+                                                    weekdayCache = weekday;
+                                                }
+                                                float weight = start_unit - unitCache;
+                                                if (weight < 0) {
+                                                    if (courseCardCache != null) {
+                                                        jsonObjectList.add(jsonObject);
+                                                        courseDetailDialog(courseCardCache, jsonObjectList);
+                                                        ((TextView) courseCardCache.findViewById(R.id.course_name)).setText("多课程时间冲突");
+                                                    }
+                                                } else {
+                                                    jsonObjectList.clear();
+                                                    //占位视图
+                                                    View course_card = LayoutInflater.from(context).inflate(R.layout.course_card, null); //加载单个课程布局
+                                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                                                            (ViewGroup.LayoutParams.MATCH_PARENT, 0, weight); //设置布局高度,即跨多少节课
+                                                    course_card.setLayoutParams(params);
+                                                    TextView textView = course_card.findViewById(R.id.course_name);
+                                                    textView.setText(""); //显示课程名
+                                                    textView.getBackground().setTint(Color.WHITE);
+                                                    day.addView(course_card);
 
+                                                    //课程卡片视图
+                                                    int end_unit = jsonObject.getInt("end_unit");
+                                                    unitCache = end_unit + 1;
+                                                    weight = end_unit - start_unit + 1;
+                                                    course_card = LayoutInflater.from(context).inflate(R.layout.course_card, null); //加载单个课程布局
+                                                    params = new LinearLayout.LayoutParams
+                                                            (ViewGroup.LayoutParams.MATCH_PARENT, 0, weight); //设置布局高度,即跨多少节课
+                                                    course_card.setLayoutParams(params);
+                                                    textView = course_card.findViewById(R.id.course_name);
+                                                    textView.setText(jsonObject.getString("course_name")); //显示课程名
+                                                    if (weekday % 2 == 0) {
+                                                        if (i % 2 == 0) {
+                                                            textView.getBackground().setTint(Color.parseColor("#9983CC39")); //绿
+                                                        } else {
+                                                            textView.getBackground().setTint(Color.parseColor("#ffff5722")); //红
+                                                        }
+                                                    } else {
+                                                        if (i % 2 == 0) {
+                                                            textView.getBackground().setTint(Color.parseColor("#ff00bcd4")); //蓝
+                                                        } else {
+                                                            textView.getBackground().setTint(Color.parseColor("#ffff9800")); //黄
+                                                        }
+                                                    }
+                                                    courseCardCache = course_card;
+                                                    jsonObjectList.add(jsonObject);
+                                                    courseDetailDialog(course_card, jsonObjectList);
+                                                    day.addView(course_card);
+                                                }
+                                            }
+
+                                        }
                                     } else {
                                         Toast.makeText(context, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
                                     }
@@ -518,4 +634,75 @@ public class CourseFragment extends Fragment {
         }.start();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void courseDetailDialog(View course_card, List<JSONObject> jsonObjectList) throws JSONException {
+        //初始化Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        //加载自定义的那个View,同时设置下
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        View course_detail_dialog = inflater.inflate(R.layout.course_detail_dialog, null, false);
+        builder.setView(course_detail_dialog);
+        builder.setCancelable(true);
+        final AlertDialog alert = builder.create();
+        if (jsonObjectList.size() > 1) {
+            ((TextView) course_detail_dialog.findViewById(R.id.title)).setText("多课程时间冲突");
+        } else {
+            JSONObject jsonObject = jsonObjectList.get(0);
+            ((TextView) course_detail_dialog.findViewById(R.id.title)).setText(jsonObject.getString("course_name"));
+        }
+        LinearLayout course_detail_L = course_detail_dialog.findViewById(R.id.course_detail_L);
+        for (JSONObject jsonObject : jsonObjectList) {
+            LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_login));
+            linearLayout.getBackground().setTint(Color.parseColor("#88F5FFFA")); //淡灰
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 20, 0, 0);
+            linearLayout.setLayoutParams(layoutParams); //设置布局高度,即跨多少节课);
+            linearLayout.setPadding(30, 30, 30, 30);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            TextView course_name = new TextView(context);
+            course_name.setText("课程名称：" + jsonObject.getString("course_name"));
+            linearLayout.addView(course_name);
+            TextView activity_weekstate = new TextView(context);
+            activity_weekstate.setPadding(250, 0, 0, 0);
+            activity_weekstate.setText(jsonObject.getString("activity_weekstate"));
+            linearLayout.addView(activity_weekstate);
+            TextView time = new TextView(context);
+            time.setPadding(250, 0, 0, 0);
+            time.setText(jsonObject.getString("start_time") + " - " + jsonObject.getString("end_time"));
+            linearLayout.addView(time);
+            JSONArray rooms = jsonObject.getJSONArray("rooms");
+            for (int i = 0; i < rooms.length(); i++) {
+                JSONObject room = rooms.getJSONObject(i);
+                TextView campus_name = new TextView(context);
+                campus_name.setText("校区：" + room.getString("campus_name") + "（" + room.getString("floor_name") + "）");
+                linearLayout.addView(campus_name);
+                TextView room_name = new TextView(context);
+                room_name.setPadding(160, 0, 0, 0);
+                room_name.setText(room.getString("name"));
+                linearLayout.addView(room_name);
+            }
+            JSONArray teachers = jsonObject.getJSONArray("teachers");
+            for (int i = 0; i < teachers.length(); i++) {
+                TextView teacher_name = new TextView(context);
+                teacher_name.setText("教师：" + teachers.getJSONObject(i).getString("name"));
+                linearLayout.addView(teacher_name);
+            }
+            course_detail_L.addView(linearLayout);
+        }
+
+        course_detail_dialog.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.dismiss();
+            }
+        });
+        course_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert.show();
+            }
+        });
+    }
 }

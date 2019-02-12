@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzf.myhfuteducn.fragment.AchievementFragment;
 import com.lzf.myhfuteducn.fragment.CourseFragment;
 import com.lzf.myhfuteducn.fragment.SignFragment;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
@@ -37,12 +38,14 @@ public class MainActivity extends AppCompatActivity
     private TextView toolbarTitle;
     private FragmentManager fragmentManager;
     private CourseFragment courseFragment;
+    private SignFragment signFragment;
+    private AchievementFragment achievementFragment;
 
     public static JSONObject semesterWeekList; //所有学期以及按照学期分的周相关信息
     public static int semesterorder; //学期列表序号
-    public static String semestercode; //学期代码
+    public static int semestercode; //学期代码
     public static String semestername; //学期名称
-    public static String weekIndx; //第几周
+    public static int weekIndx; //第几周
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -87,68 +90,7 @@ public class MainActivity extends AppCompatActivity
         fragmentManager = getFragmentManager();
         menu = navigationView.getMenu();
 
-        if (SharedPreferencesUtil.contains(this, "projectId0")) {
-            getSemesterWeekList();
-        } else {
-            new Thread() {
-                @Override
-                public void run() {
-                    super.run();
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("userKey", SharedPreferencesUtil.get(MainActivity.this, "userKey", "") + "");
-                    map.put("identity", 0 + "");
-                    final String response = OkHttpUtil.submit(UrlUtil.GET_PROJECT_INFO, map);
-                /*
-                 {
-                 "code": 200,
-                 "msg": "查询成功！",
-                 "salt": null,
-                 "token": null,
-                 "obj": {
-                 "business_data": [
-                 {
-                 "id": "2",
-                 "name": "本科"
-                 }
-                 ],
-                 "err_code": "00000",
-                 "err_msg": ""
-                 },
-                 "error": null
-                 }
-                 */
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                JSONObject responseJson = new JSONObject(response);
-                                if (responseJson.getInt("code") == 200) {
-                                    Toast.makeText(MainActivity.this, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
-                                    JSONObject objJson = responseJson.getJSONObject("obj");
-                                    if (objJson != null) {
-                                        JSONArray businessDataJson = objJson.getJSONArray("business_data");
-                                        if (businessDataJson != null && businessDataJson.length() > 0) {
-                                            for (int i = 0; i < businessDataJson.length(); i++) {
-                                                SharedPreferencesUtil.put(MainActivity.this, "projectId" + i, businessDataJson.getJSONObject(i).getString("id"));
-                                                SharedPreferencesUtil.put(MainActivity.this, "projectName" + i, businessDataJson.getJSONObject(i).getString("name"));
-                                            }
-                                            getSemesterWeekList();
-                                        } else {
-                                            Toast.makeText(MainActivity.this, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                } else {
-                                    Toast.makeText(MainActivity.this, responseJson.getString("error"), Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (JSONException e) {
-                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            }.start();
-        }
+        getProjectInfo();
     }
 
     @Override
@@ -193,13 +135,15 @@ public class MainActivity extends AppCompatActivity
         //            return true;
         //        }
         semesterorder = item.getOrder();
-        semestercode = item.getItemId() + "";
+        semestercode = item.getItemId();
         semestername = item.getTitle() + "";
         try {
             if (courseFragment.isVisible()) {
                 JSONArray semesters = semesterWeekList.getJSONArray("semesters");
-                weekIndx = semesters.getJSONObject(semesterorder).getString("week_start_at");
+                weekIndx = semesters.getJSONObject(semesterorder).getInt("week_start_at");
                 menu.performIdentifierAction(R.id.nav_course, 0);
+            } else if (achievementFragment.isVisible()) {
+                menu.performIdentifierAction(R.id.nav_achievement, 0);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -207,12 +151,32 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        try {
+            if (semesterWeekList == null) {
+                getProjectInfo();
+            } else {
+                switchFragment(item);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
+     * 切换Fragment
+     *
+     * @param item
+     */
+    private void switchFragment(MenuItem item) {
         FragmentTransaction fTransaction = fragmentManager.beginTransaction();
-        hideAllFragment(fTransaction);
+        if (courseFragment != null)
+            fTransaction.hide(courseFragment);
+
         int id = item.getItemId();
         if (id == R.id.nav_course) {
             toolbarTitle.setText("课程表");
@@ -220,13 +184,15 @@ public class MainActivity extends AppCompatActivity
             fTransaction.replace(R.id.centerContent, courseFragment);
         } else if (id == R.id.nav_sign) {
             toolbarTitle.setText("课堂签到");
-            fTransaction.replace(R.id.centerContent, new SignFragment());
+            signFragment = new SignFragment();
+            fTransaction.replace(R.id.centerContent, signFragment);
         } else if (id == R.id.nav_community) {
             toolbarTitle.setText("社区");
             fTransaction.replace(R.id.centerContent, new SignFragment());
         } else if (id == R.id.nav_achievement) {
             toolbarTitle.setText("查成绩");
-            fTransaction.replace(R.id.centerContent, new SignFragment());
+            achievementFragment = new AchievementFragment();
+            fTransaction.replace(R.id.centerContent, achievementFragment);
         } else if (id == R.id.nav_infoset) {
             toolbarTitle.setText("信息设置");
             fTransaction.replace(R.id.centerContent, new SignFragment());
@@ -237,23 +203,75 @@ public class MainActivity extends AppCompatActivity
         fTransaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     /**
-     * 隐藏所有Fragment
-     *
-     * @param fragmentTransaction
+     * 查询学历信息
      */
-    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
-        if (courseFragment != null)
-            fragmentTransaction.hide(courseFragment);
-        //        if (fNotification != null)
-        //            fragmentTransaction.hide(fNotification);
-        //        if (fMyself != null)
-        //            fragmentTransaction.hide(fMyself);
-        // if (fRepairs != null)
-        // fragmentTransaction.hide(fRepairs);
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void getProjectInfo() {
+        if (SharedPreferencesUtil.contains(this, "projectId0")) {
+            getSemesterWeekList();
+        } else {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("userKey", SharedPreferencesUtil.get(MainActivity.this, "userKey", "") + "");
+                    map.put("identity", 0 + "");
+                    final String response = OkHttpUtil.submit(UrlUtil.GET_PROJECT_INFO, map);
+                    /*
+                     {
+                     "code": 200,
+                     "msg": "查询成功！",
+                     "salt": null,
+                     "token": null,
+                     "obj": {
+                     "business_data": [
+                     {
+                     "id": "2",
+                     "name": "本科"
+                     }
+                     ],
+                     "err_code": "00000",
+                     "err_msg": ""
+                     },
+                     "error": null
+                     }
+                     */
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                JSONObject responseJson = new JSONObject(response);
+                                if (responseJson.getInt("code") == 200) {
+                                    Toast.makeText(MainActivity.this, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
+                                    JSONObject objJson = responseJson.getJSONObject("obj");
+                                    if (objJson != null) {
+                                        JSONArray businessDataJson = objJson.getJSONArray("business_data");
+                                        if (businessDataJson != null) {
+                                            for (int i = 0; i < businessDataJson.length(); i++) {
+                                                SharedPreferencesUtil.put(MainActivity.this, "projectId" + i, businessDataJson.getJSONObject(i).getString("id"));
+                                                SharedPreferencesUtil.put(MainActivity.this, "projectName" + i, businessDataJson.getJSONObject(i).getString("name"));
+                                            }
+                                            getSemesterWeekList();
+                                        } else {
+                                            Toast.makeText(MainActivity.this, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(MainActivity.this, responseJson.getString("error"), Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (JSONException e) {
+                                Toast.makeText(MainActivity.this, response, Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }.start();
+        }
     }
 
     /**
@@ -4072,9 +4090,20 @@ public class MainActivity extends AppCompatActivity
                                 if (objJson != null) {
                                     semesterWeekList = objJson.getJSONObject("business_data");
                                     if (semesterWeekList != null) {
-                                        semestercode = semesterWeekList.getString("cur_semester_code");
-                                        weekIndx = semesterWeekList.getString("cur_week_index");
-                                        menu.performIdentifierAction(R.id.nav_course, 0);
+                                        semestercode = semesterWeekList.getInt("cur_semester_code");
+                                        weekIndx = semesterWeekList.getInt("cur_week_index");
+                                        if (courseFragment == null || courseFragment.isVisible()) {
+                                            menu.performIdentifierAction(R.id.nav_course, 0);
+                                        }
+                                        JSONArray semesters = semesterWeekList.getJSONArray("semesters");
+                                        for (int i = 0; i < semesters.length(); i++) {
+                                            int itemId = semesters.getJSONObject(i).getInt("code");
+                                            String title = semesters.getJSONObject(i).getString("name");
+                                            if (itemId == semestercode) {
+                                                semestername = title;
+                                                break;
+                                            }
+                                        }
                                     } else {
                                         Toast.makeText(MainActivity.this, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
                                     }
@@ -4101,7 +4130,9 @@ public class MainActivity extends AppCompatActivity
         try {
             JSONArray semesters = semesterWeekList.getJSONArray("semesters");
             for (int i = 0; i < semesters.length(); i++) {
-                menu.add(0, semesters.getJSONObject(i).getInt("code"), i, semesters.getJSONObject(i).getString("name"));
+                int itemId = semesters.getJSONObject(i).getInt("code");
+                String title = semesters.getJSONObject(i).getString("name");
+                menu.add(0, itemId, i, title);
             }
         } catch (JSONException e) {
             e.printStackTrace();

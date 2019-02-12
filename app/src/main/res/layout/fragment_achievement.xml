@@ -1,0 +1,33 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@android:color/white"
+             tools:context="com.lzf.myhfuteducn.fragment.AchievementFragment">
+
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/semester_credits_gp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="2018-2019学年第二学期（总学分：27.25；总绩点：3.67）"/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/semester_credits_gp"
+            android:divider="@null"
+            android:dividerHeight="10dp"
+            android:padding="10dp">
+
+        </ListView>
+    </RelativeLayout>
+</FrameLayout>

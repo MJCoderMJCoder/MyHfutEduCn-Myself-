@@ -13,4 +13,6 @@ public interface UrlUtil {
     String GET_SEMESTER_WEEK_LIST = "http://jxglstu.hfut.edu.cn:7070/appservice/home/publicdata/getSemesterAndWeekList.action";
     //获取一周的课程表
     String GET_WEEK_SCHEDULE = "http://jxglstu.hfut.edu.cn:7070/appservice/home/schedule/getWeekSchedule.action";
+    //查询成绩
+    String GET_SEMESTER_SCORE = "http://jxglstu.hfut.edu.cn:7070/appservice/home/course/getSemesterScoreList.action";
 }
