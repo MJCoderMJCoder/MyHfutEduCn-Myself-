@@ -208,8 +208,10 @@ public class MainActivity extends AppCompatActivity
             fTransaction.replace(R.id.centerContent, aboutFragment);
         } else if (id == R.id.nav_clear) {
             toolbarTitle.setText("清除缓存");
-            clearFragment = new ClearFragment();
-            fTransaction.replace(R.id.centerContent, clearFragment);
+            if (clearFragment == null || !clearFragment.isVisible()) {
+                clearFragment = new ClearFragment();
+                fTransaction.replace(R.id.centerContent, clearFragment);
+            }
         } else if (id == R.id.nav_switch) {
             toolbarTitle.setText("切换账号");
             startActivity(new Intent(this, LoginActivity.class));

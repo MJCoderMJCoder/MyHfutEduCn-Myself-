@@ -43,7 +43,6 @@ import java.util.HashMap;
 
 public class LzfApplication extends Application {
 
-
     //云旺OpenIM的DEMO用到的Application上下文实例
     private static Context context;
 

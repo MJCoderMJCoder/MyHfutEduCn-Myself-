@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.lzf.myhfuteducn.R;
+import com.lzf.myhfuteducn.view.CircleProgressBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +32,8 @@ public class ClearFragment extends Fragment {
     //    private String mParam2;
 
     //    private OnFragmentInteractionListener mListener;
+
+    private View view;
 
     public ClearFragment() {
         // Required empty public constructor
@@ -64,7 +69,29 @@ public class ClearFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clear, container, false);
+        view = inflater.inflate(R.layout.fragment_clear, container, false);
+        final CircleProgressBar circleProgressBar = view.findViewById(R.id.circleProgressBar);
+        final Button clear = view.findViewById(R.id.clear);
+        circleProgressBar.setOnProgressEndListener(new CircleProgressBar.CircleProgressEndListener() {
+            @Override
+            public void onProgressEndListener() {
+                if (clear.getAlpha() != 1.0f) {
+                    clear.setEnabled(true);
+                    clear.setAlpha(1.0f);
+                } else {
+                    clear.setEnabled(false);
+                    clear.setAlpha(0.1f);
+                }
+            }
+        });
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear.setEnabled(false);
+                circleProgressBar.clearCache(true);
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
