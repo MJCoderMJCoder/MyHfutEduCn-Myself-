@@ -30,10 +30,23 @@
                     android:id="@+id/nav_infoset"
                     android:icon="@drawable/ic_infoset"
                     android:title="信息设置"/>
-                <item
+                <!--<item
                     android:id="@+id/nav_skin"
                     android:icon="@drawable/ic_skin"
+                    android:title="个性换肤"/>-->
+                <item
+                    android:id="@+id/nav_about"
+                    android:icon="@drawable/ic_about"
+                    android:title="关于我们"/>
+                <item
+                    android:id="@+id/nav_clear"
+                    android:icon="@drawable/ic_clear"
+                    android:title="清除缓存"/>
+                <item
+                    android:id="@+id/nav_switch"
+                    android:icon="@drawable/ic_switch"
                     android:title="切换账号"/>
+
             </group>
         </menu>
     </item>

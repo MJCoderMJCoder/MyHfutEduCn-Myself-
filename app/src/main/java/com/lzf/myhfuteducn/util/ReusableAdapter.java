@@ -2,7 +2,8 @@ package com.lzf.myhfuteducn.util;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 
 import com.lzf.myhfuteducn.bean.Lesson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -225,38 +225,47 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
             return this;
         }
 
-        private List<Lesson.Examgrade> examgradeListCache = new ArrayList<Lesson.Examgrade>();
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        public ViewHolder setBackgroundTint(int id, int tintColor) {
+            View view = getView(id);
+            view.getBackground().setTint(tintColor);
+            return this;
+        }
 
+        /**
+         * 动态添加成绩的子视图
+         *
+         * @param id
+         * @param examgradeList
+         * @return
+         */
         public ViewHolder dynamicAddTV(int id, List<Lesson.Examgrade> examgradeList) {
             try {
                 LinearLayout view = getView(id);
-                Log.v("lzf", examgradeList.toString());
+                view.removeAllViews();
                 for (Lesson.Examgrade examgrade : examgradeList) {
-                    if (!examgradeListCache.contains(examgrade)) {
-                        LinearLayout linearLayout = new LinearLayout(context);
-                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        linearLayout.setPadding(250, 0, 0, 0);
-                        TextView type = new TextView(context);
-                        type.setTextSize(14);
-                        type.setText(examgrade.getType() + "：" + examgrade.getScore_text());
-                        type.setPadding(15, 15, 40, 15);
-                        type.setTextColor(Color.WHITE);
-                        linearLayout.addView(type);
-                        TextView type_state = new TextView(context);
-                        type_state.setTextSize(12);
-                        type_state.setText("状态：" + examgrade.getState());
-                        type_state.setPadding(15, 15, 40, 15);
-                        type_state.setTextColor(Color.WHITE);
-                        linearLayout.addView(type_state);
-                        TextView type_score = new TextView(context);
-                        type_score.setTextSize(12);
-                        type_score.setText("分数：" + examgrade.getScore());
-                        type_score.setPadding(15, 15, 15, 15);
-                        type_score.setTextColor(Color.WHITE);
-                        linearLayout.addView(type_score);
-                        view.addView(linearLayout);
-                        examgradeListCache.add(examgrade);
-                    }
+                    LinearLayout linearLayout = new LinearLayout(context);
+                    linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    linearLayout.setPadding(250, 0, 0, 0);
+                    TextView type = new TextView(context);
+                    type.setTextSize(14);
+                    type.setText(examgrade.getType() + "：" + examgrade.getScore_text());
+                    type.setPadding(15, 15, 40, 15);
+                    type.setTextColor(Color.WHITE);
+                    linearLayout.addView(type);
+                    TextView type_state = new TextView(context);
+                    type_state.setTextSize(12);
+                    type_state.setText("状态：" + examgrade.getState());
+                    type_state.setPadding(15, 15, 40, 15);
+                    type_state.setTextColor(Color.WHITE);
+                    linearLayout.addView(type_state);
+                    TextView type_score = new TextView(context);
+                    type_score.setTextSize(12);
+                    type_score.setText("分数：" + examgrade.getScore());
+                    type_score.setPadding(15, 15, 15, 15);
+                    type_score.setTextColor(Color.WHITE);
+                    linearLayout.addView(type_score);
+                    view.addView(linearLayout);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

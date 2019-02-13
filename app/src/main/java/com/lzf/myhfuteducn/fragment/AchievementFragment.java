@@ -1,12 +1,12 @@
 package com.lzf.myhfuteducn.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
 import com.lzf.myhfuteducn.bean.Lesson;
-import com.lzf.myhfuteducn.bean.Week;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.ReusableAdapter;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
@@ -150,7 +149,7 @@ public class AchievementFragment extends Fragment {
                         try {
                             JSONObject responseJson = new JSONObject(response);
                             if (responseJson.getInt("code") == 200) {
-                                Toast.makeText(context, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
+                                //                                Toast.makeText(context, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
                                 JSONObject objJson = responseJson.getJSONObject("obj");
                                 if (objJson != null) {
                                     JSONObject businessDataJson = objJson.getJSONObject("business_data");
@@ -164,7 +163,6 @@ public class AchievementFragment extends Fragment {
                                             ListView listView = view.findViewById(R.id.listView);
                                             List<Lesson> lessonList = new Gson().fromJson(lessons.toString(), new TypeToken<List<Lesson>>() {
                                             }.getType());
-                                            Log.v("lzf", lessonList.toString());
                                             listView.setAdapter(new ReusableAdapter<Lesson>(lessonList, R.layout.item_score) {
                                                 /**
                                                  * 定义一个抽象方法，完成ViewHolder与相关数据集的绑定
@@ -176,6 +174,11 @@ public class AchievementFragment extends Fragment {
                                                  */
                                                 @Override
                                                 public void bindView(ViewHolder holder, Lesson obj) {
+                                                    if (obj.isPassed()) {
+                                                        holder.setBackgroundTint(R.id.score_card, Color.parseColor("#9983CC39")); //绿
+                                                    } else {
+                                                        holder.setBackgroundTint(R.id.score_card, Color.parseColor("#ffff5722")); //红
+                                                    }
                                                     holder.setText(R.id.course_name, obj.getCourse_name() + "：" + obj.getScore_text());
                                                     holder.setText(R.id.score, "分数：" + obj.getScore());
                                                     holder.setText(R.id.course_credit, "学分：" + obj.getCourse_credit());
@@ -184,7 +187,7 @@ public class AchievementFragment extends Fragment {
                                                 }
                                             });
                                         } else {
-                                            Toast.makeText(context, "该学期成绩还未出", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "该学期成绩暂无", Toast.LENGTH_SHORT).show();
                                         }
                                     } else {
                                         Toast.makeText(context, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();

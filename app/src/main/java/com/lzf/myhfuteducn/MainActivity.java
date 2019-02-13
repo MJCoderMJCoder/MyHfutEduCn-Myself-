@@ -1,11 +1,12 @@
 package com.lzf.myhfuteducn;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,8 +18,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzf.myhfuteducn.fragment.AboutFragment;
 import com.lzf.myhfuteducn.fragment.AchievementFragment;
+import com.lzf.myhfuteducn.fragment.ClearFragment;
 import com.lzf.myhfuteducn.fragment.CourseFragment;
+import com.lzf.myhfuteducn.fragment.InfosetFragment;
 import com.lzf.myhfuteducn.fragment.SignFragment;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
@@ -37,9 +41,13 @@ public class MainActivity extends AppCompatActivity
     private Menu menu;
     private TextView toolbarTitle;
     private FragmentManager fragmentManager;
-    private CourseFragment courseFragment;
-    private SignFragment signFragment;
+
+    private AboutFragment aboutFragment;
     private AchievementFragment achievementFragment;
+    private ClearFragment clearFragment;
+    private CourseFragment courseFragment;
+    private InfosetFragment infosetFragment;
+    private SignFragment signFragment;
 
     public static JSONObject semesterWeekList; //所有学期以及按照学期分的周相关信息
     public static int semesterorder; //学期列表序号
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity
         depart_name_adminclass_name.setText(SharedPreferencesUtil.get(this, "depart_name", "") + "-" + SharedPreferencesUtil.get(this, "adminclass_name", ""));
         navigationView.setNavigationItemSelectedListener(this);
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         menu = navigationView.getMenu();
 
         getProjectInfo();
@@ -174,9 +182,6 @@ public class MainActivity extends AppCompatActivity
      */
     private void switchFragment(MenuItem item) {
         FragmentTransaction fTransaction = fragmentManager.beginTransaction();
-        if (courseFragment != null)
-            fTransaction.hide(courseFragment);
-
         int id = item.getItemId();
         if (id == R.id.nav_course) {
             toolbarTitle.setText("课程表");
@@ -195,10 +200,20 @@ public class MainActivity extends AppCompatActivity
             fTransaction.replace(R.id.centerContent, achievementFragment);
         } else if (id == R.id.nav_infoset) {
             toolbarTitle.setText("信息设置");
-            fTransaction.replace(R.id.centerContent, new SignFragment());
-        } else if (id == R.id.nav_skin) {
+            infosetFragment = new InfosetFragment();
+            fTransaction.replace(R.id.centerContent, infosetFragment);
+        } else if (id == R.id.nav_about) {
+            toolbarTitle.setText("关于我们");
+            aboutFragment = new AboutFragment();
+            fTransaction.replace(R.id.centerContent, aboutFragment);
+        } else if (id == R.id.nav_clear) {
+            toolbarTitle.setText("清除缓存");
+            clearFragment = new ClearFragment();
+            fTransaction.replace(R.id.centerContent, clearFragment);
+        } else if (id == R.id.nav_switch) {
             toolbarTitle.setText("切换账号");
-            fTransaction.replace(R.id.centerContent, new SignFragment());
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
         fTransaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

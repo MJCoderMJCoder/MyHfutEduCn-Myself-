@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,17 +33,18 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordET;
     private Button loginBtn;
 
+
+    public static final String AUTO_LOGIN_STATE_ACTION = "com.openim.autoLoginStateActionn";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //设置当前窗体为全屏显示
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         studentIdET = findViewById(R.id.studentIdET);
         passwordET = findViewById(R.id.passwordET);
         loginBtn = findViewById(R.id.loginBtn);
-        if (SharedPreferencesUtil.contains(this, "userKey")) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
     }
 
     public void onClick(View view) {
