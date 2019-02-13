@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.lzf.myhfuteducn.R;
@@ -72,9 +73,12 @@ public class ClearFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_clear, container, false);
         final CircleProgressBar circleProgressBar = view.findViewById(R.id.circleProgressBar);
         final Button clear = view.findViewById(R.id.clear);
+        final ProgressBar progressBar = view.findViewById(R.id.progressBar);
         circleProgressBar.setOnProgressEndListener(new CircleProgressBar.CircleProgressEndListener() {
             @Override
             public void onProgressEndListener() {
+                clear.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
                 if (clear.getAlpha() != 1.0f) {
                     clear.setEnabled(true);
                     clear.setAlpha(1.0f);
@@ -88,6 +92,8 @@ public class ClearFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 clear.setEnabled(false);
+                clear.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
                 circleProgressBar.clearCache(true);
             }
         });

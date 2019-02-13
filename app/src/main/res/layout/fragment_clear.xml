@@ -29,8 +29,7 @@
                 android:layout_centerInParent="true"
                 android:alpha="0.1"
                 android:background="@drawable/rounded_rectangle_login"
-                android:backgroundTint="#003C54"
-                android:drawableTint="@android:color/white"
+                android:backgroundTint="#7288fc"
                 android:enabled="false"
                 android:gravity="center"
                 android:paddingLeft="50dp"
@@ -39,6 +38,14 @@
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:visibility="visible"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>
 </FrameLayout>

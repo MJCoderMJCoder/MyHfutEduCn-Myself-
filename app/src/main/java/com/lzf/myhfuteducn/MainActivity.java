@@ -87,10 +87,10 @@ public class MainActivity extends AppCompatActivity
         user_name.setText("姓名：" + SharedPreferencesUtil.get(this, "user_name", ""));
         TextView user_code = headerView.findViewById(R.id.user_code);
         user_code.setText("学号：" + SharedPreferencesUtil.get(this, "user_code", ""));
-        TextView account_email = headerView.findViewById(R.id.account_email);
-        account_email.setText("邮箱：" + SharedPreferencesUtil.get(this, "account_email", ""));
-        TextView mobile_phone = headerView.findViewById(R.id.mobile_phone);
-        mobile_phone.setText("手机：" + SharedPreferencesUtil.get(this, "mobile_phone", ""));
+        //        TextView account_email = headerView.findViewById(R.id.account_email);
+        //        account_email.setText("邮箱：" + SharedPreferencesUtil.get(this, "account_email", ""));
+        //        TextView mobile_phone = headerView.findViewById(R.id.mobile_phone);
+        //        mobile_phone.setText("手机：" + SharedPreferencesUtil.get(this, "mobile_phone", ""));
         TextView depart_name_adminclass_name = headerView.findViewById(R.id.depart_name_adminclass_name);
         depart_name_adminclass_name.setText(SharedPreferencesUtil.get(this, "depart_name", "") + "-" + SharedPreferencesUtil.get(this, "adminclass_name", ""));
         navigationView.setNavigationItemSelectedListener(this);
@@ -146,11 +146,11 @@ public class MainActivity extends AppCompatActivity
         semestercode = item.getItemId();
         semestername = item.getTitle() + "";
         try {
-            if (courseFragment.isVisible()) {
+            if (courseFragment != null && courseFragment.isVisible()) {
                 JSONArray semesters = semesterWeekList.getJSONArray("semesters");
                 weekIndx = semesters.getJSONObject(semesterorder).getInt("week_start_at");
                 menu.performIdentifierAction(R.id.nav_course, 0);
-            } else if (achievementFragment.isVisible()) {
+            } else if (achievementFragment != null && achievementFragment.isVisible()) {
                 menu.performIdentifierAction(R.id.nav_achievement, 0);
             }
         } catch (JSONException e) {

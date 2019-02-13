@@ -2,13 +2,32 @@ package com.lzf.myhfuteducn.fragment;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
+import com.lzf.myhfuteducn.util.OkHttpUtil;
+import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
+import com.lzf.myhfuteducn.util.UrlUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +48,13 @@ public class InfosetFragment extends Fragment {
     //    private String mParam2;
 
     //    private OnFragmentInteractionListener mListener;
+
+    private Context context;
+    private View view;
+    private EditText account_email;
+    private EditText mobile_phone;
+    private String accountEmail;
+    private String mobilePhone;
 
     public InfosetFragment() {
         // Required empty public constructor
@@ -64,7 +90,93 @@ public class InfosetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_infoset, container, false);
+        view = inflater.inflate(R.layout.fragment_infoset, container, false);
+        TextView user_name = view.findViewById(R.id.user_name);
+        user_name.setText("姓名：" + SharedPreferencesUtil.get(context, "user_name", ""));
+        TextView user_code = view.findViewById(R.id.user_code);
+        user_code.setText("学号：" + SharedPreferencesUtil.get(context, "user_code", ""));
+        TextView depart_name_adminclass_name = view.findViewById(R.id.depart_name_adminclass_name);
+        depart_name_adminclass_name.setText(SharedPreferencesUtil.get(context, "depart_name", "") + "-" + SharedPreferencesUtil.get(context, "adminclass_name", ""));
+        TextView major_name = view.findViewById(R.id.major_name);
+        major_name.setText("专业：" + SharedPreferencesUtil.get(context, "major_name", ""));
+        TextView projectName = view.findViewById(R.id.projectName);
+        projectName.setText("学历：" + SharedPreferencesUtil.get(context, "projectName0", ""));
+        TextView birthday = view.findViewById(R.id.birthday);
+        birthday.setText("出生日期：" + SharedPreferencesUtil.get(context, "birthday", ""));
+        TextView gender = view.findViewById(R.id.gender);
+        gender.setText("性别：" + SharedPreferencesUtil.get(context, "gender", ""));
+        account_email = view.findViewById(R.id.account_email);
+        account_email.setText("" + SharedPreferencesUtil.get(context, "account_email", ""));
+        mobile_phone = view.findViewById(R.id.mobile_phone);
+        mobile_phone.setText("" + SharedPreferencesUtil.get(context, "mobile_phone", ""));
+        final Button submitPhoneEmail = view.findViewById(R.id.submitPhoneEmail);
+        submitPhoneEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (submitCheck()) { //开始登陆
+                    submitPhoneEmail.setEnabled(false);
+                    new Thread() {
+                        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                        @Override
+                        public void run() {
+                            super.run();
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("email", accountEmail);
+                            map.put("phone", mobilePhone);
+                            map.put("userKey", SharedPreferencesUtil.get(context, "userKey", "") + "");
+                            map.put("identity", 0 + "");
+                            final String response = OkHttpUtil.submit(UrlUtil.EDIT_PHONE_EMAIL, map);
+                            /*
+                             {
+                             "code": 200,
+                             "msg": "查询成功！",
+                             "salt": null,
+                             "token": null,
+                             "obj": {
+                             "business_data": {
+                             "success": true,
+                             "user_code": "2016210855"
+                             },
+                             "err_code": "00000",
+                             "err_msg": ""
+                             },
+                             "error": null
+                             }
+                             */
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        JSONObject responseJson = new JSONObject(response);
+                                        if (responseJson.getInt("code") == 200) {
+                                            Toast.makeText(context, responseJson.getString("msg"), Toast.LENGTH_SHORT).show();
+                                            JSONObject objJson = responseJson.getJSONObject("obj");
+                                            if (objJson != null) {
+                                                JSONObject businessDataJson = objJson.getJSONObject("business_data");
+                                                if (businessDataJson != null) {
+                                                    SharedPreferencesUtil.put(context, "user_code", businessDataJson.getString("user_code"));
+                                                    SharedPreferencesUtil.put(context, "account_email", accountEmail);
+                                                    SharedPreferencesUtil.put(context, "mobile_phone", mobilePhone);
+                                                } else {
+                                                    Toast.makeText(context, objJson.getString("err_msg"), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        } else {
+                                            Toast.makeText(context, responseJson.getString("error"), Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                    submitPhoneEmail.setEnabled(true);
+                                }
+                            });
+                        }
+                    }.start();
+                }
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,6 +189,7 @@ public class InfosetFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        this.context = context;
         //        if (context instanceof OnFragmentInteractionListener) {
         //            mListener = (OnFragmentInteractionListener) context;
         //        } else {
@@ -105,4 +218,34 @@ public class InfosetFragment extends Fragment {
     //        // TODO: Update argument type and name
     //        void onFragmentInteraction(Uri uri);
     //    }
+    private boolean submitCheck() {
+        boolean valid = true;
+        accountEmail = account_email.getText().toString();
+        mobilePhone = mobile_phone.getText().toString();
+        if (accountEmail == null || accountEmail.trim().equals("") || !isEmail(accountEmail)) {
+            valid = false;
+            account_email.requestFocus(); //学号输入框获取焦点
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(account_email, 0); //弹出软键盘
+            Toast.makeText(context, "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
+        } else if (mobilePhone == null || mobilePhone.trim().equals("")) {
+            valid = false;
+            mobile_phone.requestFocus(); //密码输入框获取焦点
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mobile_phone, 0); //弹出软键盘
+            Toast.makeText(context, "请输入手机号", Toast.LENGTH_SHORT).show();
+        }
+        return valid;
+    }
+
+
+    /**
+     * 判断格式是否为email
+     */
+    public static boolean isEmail(String email) {
+        String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        Pattern p = Pattern.compile(str);
+        Matcher m = p.matcher(email);
+        return m.matches();
+    }
 }

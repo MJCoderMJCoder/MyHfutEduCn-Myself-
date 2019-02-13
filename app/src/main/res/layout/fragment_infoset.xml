@@ -2,12 +2,154 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:background="@android:color/white"
              tools:context="com.lzf.myhfuteducn.fragment.InfosetFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="信息设置"/>
+        android:orientation="vertical"
+        android:padding="40dp">
 
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_launcher"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="姓名：赵文翔"/>
+
+                <TextView
+                    android:id="@+id/user_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="学号：2016210855"/>
+
+                <TextView
+                    android:id="@+id/depart_name_adminclass_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="机械工程学院-工业工16-2班"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:id="@+id/major_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="专业：工业工程"/>
+
+            <TextView
+                android:id="@+id/projectName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="学历：本科"/>
+
+            <TextView
+                android:id="@+id/birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="出生日期：1998-01-25"/>
+
+            <TextView
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:padding="5dp"
+                android:text="性别：男"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_rectangle"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="邮箱："
+                    android:textColor="@android:color/black"/>
+
+
+                <EditText
+                    android:id="@+id/account_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="10dp"
+                    android:text="zwx19980125@qq.com"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_rectangle"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="手机："
+                    android:textColor="@android:color/black"/>
+
+
+                <EditText
+                    android:id="@+id/mobile_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:padding="10dp"
+                    android:text="17355305937"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/submitPhoneEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/rounded_rectangle_login"
+                android:backgroundTint="#7288fc"
+                android:text="修改手机邮箱"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </LinearLayout>
 </FrameLayout>
