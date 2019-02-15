@@ -20,7 +20,7 @@
             android:text="2018-2019学年第二学期（总学分：27.25；总绩点：3.67）"/>
 
         <ListView
-            android:id="@+id/listView"
+            android:id="@+id/acvmtListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/semester_credits_gp"

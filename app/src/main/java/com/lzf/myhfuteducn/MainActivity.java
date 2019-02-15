@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.lzf.myhfuteducn.fragment.AboutFragment;
 import com.lzf.myhfuteducn.fragment.AchievementFragment;
 import com.lzf.myhfuteducn.fragment.ClearFragment;
+import com.lzf.myhfuteducn.fragment.CommunityFragment;
 import com.lzf.myhfuteducn.fragment.CourseFragment;
 import com.lzf.myhfuteducn.fragment.InfosetFragment;
 import com.lzf.myhfuteducn.fragment.SignFragment;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     private AboutFragment aboutFragment;
     private AchievementFragment achievementFragment;
     private ClearFragment clearFragment;
+    private CommunityFragment communityFragment;
     private CourseFragment courseFragment;
     private InfosetFragment infosetFragment;
     private SignFragment signFragment;
@@ -193,7 +195,8 @@ public class MainActivity extends AppCompatActivity
             fTransaction.replace(R.id.centerContent, signFragment);
         } else if (id == R.id.nav_community) {
             toolbarTitle.setText("社区");
-            fTransaction.replace(R.id.centerContent, new SignFragment());
+            communityFragment = new CommunityFragment();
+            fTransaction.replace(R.id.centerContent, communityFragment);
         } else if (id == R.id.nav_achievement) {
             toolbarTitle.setText("查成绩");
             achievementFragment = new AchievementFragment();

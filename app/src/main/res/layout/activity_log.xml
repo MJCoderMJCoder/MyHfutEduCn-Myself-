@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    tools:context="com.lzf.myhfuteducn.LogActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorPrimary"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:drawableLeft="@drawable/ic_chevron_left"
+            android:gravity="center"
+            android:onClick="doClick"
+            android:text="返回"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="发表至社区"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <ImageView
+                android:id="@+id/useImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="doClick"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/atlantis"/>
+
+            <LinearLayout
+                android:id="@+id/cameraChoose"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="80dp"
+                android:background="@android:color/white"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/photograph"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="doClick"
+                    android:text="拍摄"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black"/>
+
+                <TextView
+                    android:id="@+id/localPhotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="doClick"
+                    android:text="选择本地照片"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:gravity="left|top"
+            android:hint="一边怀念，一边继续。"
+            android:inputType="textMultiLine"
+            android:padding="10dp">
+        </EditText>
+
+        <Button
+            android:id="@+id/publish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/rounded_rectangle_login"
+            android:backgroundTint="@color/colorPrimary"
+            android:onClick="doClick"
+            android:text="发表"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+</LinearLayout>

@@ -160,10 +160,10 @@ public class AchievementFragment extends Fragment {
                                             TextView semester_credits_gp = view.findViewById(R.id.semester_credits_gp);
                                             semester_credits_gp.setText(MainActivity.semestername + "（总学分：" + semester_lesson.getString("semester_credits") + "；总绩点：" + semester_lesson.getString("semester_gp") + "）");
                                             JSONArray lessons = semester_lesson.getJSONArray("lessons");
-                                            ListView listView = view.findViewById(R.id.listView);
+                                            ListView acvmtListView = view.findViewById(R.id.acvmtListView);
                                             List<Lesson> lessonList = new Gson().fromJson(lessons.toString(), new TypeToken<List<Lesson>>() {
                                             }.getType());
-                                            listView.setAdapter(new ReusableAdapter<Lesson>(lessonList, R.layout.item_score) {
+                                            acvmtListView.setAdapter(new ReusableAdapter<Lesson>(lessonList, R.layout.item_score) {
                                                 /**
                                                  * 定义一个抽象方法，完成ViewHolder与相关数据集的绑定
                                                  * <p>

@@ -133,7 +133,8 @@ public class CourseFragment extends Fragment {
                  */
                 @Override
                 public void bindView(ViewHolder holder, Week obj) {
-                    holder.setText(R.id.weeknameTV, "第 " + obj.getIndex() + " 周");
+                    holder.setText(R.id.weeknameTV, "第  " + obj.getIndex() + "  周");
+                    holder.setText(R.id.begin_end, obj.getBegin_on() + " 至 " + obj.getEnd_on());
                 }
             });
             weeknameS.setSelection(MainActivity.weekIndx - 1, true);
