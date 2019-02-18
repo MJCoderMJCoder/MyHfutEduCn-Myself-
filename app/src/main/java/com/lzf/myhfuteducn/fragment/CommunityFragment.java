@@ -339,6 +339,7 @@ public class CommunityFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
+        Log.v("onButtonPressed", "" + uri);
         //        if (mListener != null) {
         //            mListener.onFragmentInteraction(uri);
         //        }
@@ -392,5 +393,13 @@ public class CommunityFragment extends Fragment {
             imm.showSoftInput(commentET, 0); //弹出软键盘
         }
         return valid;
+    }
+
+    public boolean onBackPressed() {
+        if (commentRL != null && commentRL.getVisibility() == View.VISIBLE) {
+            commentRL.setVisibility(View.GONE);
+            return true;
+        }
+        return false;
     }
 }
