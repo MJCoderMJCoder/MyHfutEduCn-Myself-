@@ -175,7 +175,7 @@ public class AchievementFragment extends Fragment {
                                                 @Override
                                                 public void bindView(ViewHolder holder, Lesson obj) {
                                                     if (obj.isPassed()) {
-                                                        holder.setBackgroundTint(R.id.score_card, Color.parseColor("#9983CC39")); //绿
+                                                        holder.setBackgroundTint(R.id.score_card, Color.parseColor("#FF83CC39")); //绿
                                                     } else {
                                                         holder.setBackgroundTint(R.id.score_card, Color.parseColor("#ffff5722")); //红
                                                     }
