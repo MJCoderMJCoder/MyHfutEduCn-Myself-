@@ -19,12 +19,21 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.lzf.myhfuteducn.util.OkHttpUtil;
+import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
+import com.lzf.myhfuteducn.util.UrlUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,12 +42,16 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LogActivity extends AppCompatActivity {
 
     private LinearLayout cameraChoose;
-    private ImageView useImage;
+    private ImageView logImg;
+    private EditText logTxt;
+    private CheckBox checkBox;
 
     public final int REQUEST_PERMISSION = 6002; //请求权限
     public final int LOCAL_PHOTOS = 6003; //选择本地图片
@@ -46,14 +59,16 @@ public class LogActivity extends AppCompatActivity {
     private final String[] PERMISSIONS = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.MEDIA_CONTENT_CONTROL, Manifest.permission.MANAGE_DOCUMENTS, Manifest.permission.INTERNET, Manifest.permission.CAMERA};
     private File currentImageFile = null; //拍照时的缓存文件
     private List<String> permissionList = new ArrayList<String>();  // 声明一个集合，在后面的代码中用来存储用户拒绝授权的权
-
+    private String logTxtValue = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
         cameraChoose = findViewById(R.id.cameraChoose);
-        useImage = findViewById(R.id.useImage);
+        logImg = findViewById(R.id.logImg);
+        logTxt = findViewById(R.id.logTxt);
+        checkBox = findViewById(R.id.checkBox);
     }
 
     public void doClick(View view) {
@@ -63,7 +78,7 @@ public class LogActivity extends AppCompatActivity {
             case R.id.backBtn:
                 finish();
                 break;
-            case R.id.useImage:
+            case R.id.logImg:
                 cameraChoose.setVisibility(View.VISIBLE);
                 break;
             case R.id.photograph:
@@ -73,10 +88,71 @@ public class LogActivity extends AppCompatActivity {
                 imageOperation(LOCAL_PHOTOS);
                 break;
             case R.id.publish:
+                if (publishCheck()) {
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            Map<String, File> files = new HashMap<String, File>();
+                            files.put("logImg", currentImageFile);
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("logTxt", logTxtValue);
+                            params.put("logUserName", SharedPreferencesUtil.get(LogActivity.this, "user_name", "") + "");
+                            params.put("logUserPhone", SharedPreferencesUtil.get(LogActivity.this, "mobile_phone", "") + "");
+                            params.put("logUserEmail", SharedPreferencesUtil.get(LogActivity.this, "account_email", "") + "");
+                            params.put("logUserGender", SharedPreferencesUtil.get(LogActivity.this, "gender", "") + "");
+                            params.put("logUserBirthday", SharedPreferencesUtil.get(LogActivity.this, "birthday", "") + "");
+                            params.put("logUserDepart", SharedPreferencesUtil.get(LogActivity.this, "depart_name", "") + "");
+                            params.put("logUserMajor", SharedPreferencesUtil.get(LogActivity.this, "major_name", "") + "");
+                            params.put("logUserClass", SharedPreferencesUtil.get(LogActivity.this, "adminclass_name", "") + "");
+                            params.put("logIsAnonymity", checkBox.isChecked() + "");
+                            final String response = OkHttpUtil.uploadFiles(UrlUtil.LOG_INSERT, params, files);
+                            /**
+                             *   {"success":true,"describe":"日志发布成功","data":{"logId":3,"logTime":1550289089189,"logImg":"upload/9c987c68-ded2-4cc2-b794-f918b8f32e18_cameraCache.jpg","logTxt":"\uD83C\uDF0E这种，\uD83C\uDFDF️\uD83C\uDFD6️\uD83D\uDDFA️\uD83C\uDF0F\uD83C\uDF0B\uD83D\uDDFB\uD83C\uDFD7️\uD83C\uDF7B\uD83E\uDD43\uD83E\uDD42","logPraise":0,"logUserName":"赵文翔","logUserPhone":"17355305937","logUserEmail":"zwx19980125@qq.com","logUserGender":"男","logUserBirthday":"1998-01-25","logUserDepart":"机械工程学院","logUserMajor":"工业工程","logUserClass":"工业工16-2班","logIsAnonymity":false,"comments":null}}
+                             */
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        JSONObject responseJB = new JSONObject(response);
+                                        Toast.makeText(LogActivity.this, responseJB.getString("describe"), Toast.LENGTH_SHORT).show();
+                                        if (responseJB.getBoolean("success")) {
+                                            finish();
+                                        }
+                                    } catch (JSONException e) {
+                                        Toast.makeText(LogActivity.this, response, Toast.LENGTH_SHORT).show();
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+                    }.start();
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 日志发布前的前端检测
+     *
+     * @return
+     */
+    private boolean publishCheck() {
+        boolean valid = true;
+        logTxtValue = logTxt.getText().toString();
+        if (logTxtValue == null || logTxtValue.trim().equals("")) {
+            valid = false;
+            logTxt.requestFocus(); //学号输入框获取焦点
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(logTxt, 0); //弹出软键盘
+        } else if (currentImageFile == null) {
+            valid = false;
+            cameraChoose.setVisibility(View.VISIBLE);
+            Toast.makeText(LogActivity.this, "请先选择一张图片", Toast.LENGTH_SHORT).show();
+        }
+        return valid;
     }
 
     /**
@@ -437,7 +513,7 @@ public class LogActivity extends AppCompatActivity {
                         .skipMemoryCache(true) //禁止内存缓存
                         .diskCacheStrategy(DiskCacheStrategy.NONE)//图片缓存策略,这个一般必须有
                         .error(R.mipmap.ic_launcher)// 加载图片失败的时候显示的默认图
-                        .into(useImage);
+                        .into(logImg);
                 cameraChoose.setVisibility(View.GONE);
             }
         } catch (Exception e) {

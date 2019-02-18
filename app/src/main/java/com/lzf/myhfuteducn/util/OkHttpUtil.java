@@ -33,7 +33,7 @@ public class OkHttpUtil {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String uploadFiles(String url, Map<String, String> params, Map<String, File> files) {
-        Log.v(url + " >>> 请求", "");
+        Log.v("请求", url + "\n" + params.toString() + "\n" + files.toString());
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         MultipartBody.Builder builder = new MultipartBody.Builder();
         // 设置类型
@@ -44,11 +44,12 @@ public class OkHttpUtil {
             }
         }
         if (files != null && files.size() > 0) {
-            int i = 0;
+            //            int i = 0;
             for (Map.Entry<String, File> entry : files.entrySet()) {
-                i++;
+                //                i++;
                 File temp = entry.getValue();
-                builder.addFormDataPart("images" + i, temp.getName(), RequestBody.create(null, temp));
+                //                builder.addFormDataPart("images" + i, temp.getName(), RequestBody.create(null, temp));
+                builder.addFormDataPart(entry.getKey(), temp.getName(), RequestBody.create(null, temp));
             }
         }
         RequestBody body = builder.build();
@@ -58,7 +59,7 @@ public class OkHttpUtil {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        Log.v(url + " >>> 响应", message);
+        Log.v("响应", url + "\n" + message);
         return message;
     }
 
@@ -70,7 +71,7 @@ public class OkHttpUtil {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getData(String url) {
-        Log.v(url + " >>> 请求", "");
+        Log.v("请求", url);
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
@@ -78,7 +79,7 @@ public class OkHttpUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.v(url + " >>> 响应", message);
+        Log.v("响应", url + "\n" + message);
         return message;
     }
 
@@ -91,7 +92,7 @@ public class OkHttpUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String submit(String url, Map<String, String> params) {
-        Log.v(url + " >>> 请求", params.toString());
+        Log.v("请求", url + "\n" + params.toString());
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null && params.size() > 0) {
@@ -106,7 +107,7 @@ public class OkHttpUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.v(url + " >>> 响应", message);
+        Log.v("响应", url + "\n" + message);
         return message;
     }
 }

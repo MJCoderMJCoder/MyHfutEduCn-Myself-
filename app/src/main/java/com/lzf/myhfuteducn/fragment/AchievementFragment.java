@@ -183,7 +183,7 @@ public class AchievementFragment extends Fragment {
                                                     holder.setText(R.id.score, "分数：" + obj.getScore());
                                                     holder.setText(R.id.course_credit, "学分：" + obj.getCourse_credit());
                                                     holder.setText(R.id.course_gp, "绩点：" + obj.getCourse_gp());
-                                                    holder.dynamicAddTV(R.id.exam_grades, obj.getExam_grades());
+                                                    holder.dynamicAddExamgrade(R.id.exam_grades, obj.getExam_grades());
                                                 }
                                             });
                                         } else {

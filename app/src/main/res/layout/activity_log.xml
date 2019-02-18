@@ -35,6 +35,18 @@
             android:text="发表至社区"
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:buttonTint="@android:color/white"
+            android:checked="false"
+            android:text="匿名"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -47,7 +59,7 @@
             android:layout_height="250dp">
 
             <ImageView
-                android:id="@+id/useImage"
+                android:id="@+id/logImg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:onClick="doClick"
@@ -96,6 +108,7 @@
 
 
         <EditText
+            android:id="@+id/logTxt"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_margin="10dp"

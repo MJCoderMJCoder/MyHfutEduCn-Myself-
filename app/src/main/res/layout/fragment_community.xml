@@ -5,16 +5,17 @@
              android:background="@android:color/white"
              tools:context="com.lzf.myhfuteducn.fragment.CommunityFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_height="match_parent">
+
+        <!-- TODO: Update blank fragment layout -->
 
         <RelativeLayout
             android:id="@+id/searchRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/rounded_rectangle"
             android:padding="5dp">
@@ -39,18 +40,67 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/searchRL"
+            android:background="#0F000000"
             android:divider="@null"
-            android:dividerHeight="5dp">
-
+            android:dividerHeight="10dp">
         </ListView>
 
+        <RelativeLayout
+            android:id="@+id/commentRL"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#0F000000">
+
+                <Button
+                    android:id="@+id/commentSend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="9dp"
+                    android:background="@drawable/rounded_rectangle_login"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="发  送"
+                    android:textColor="@android:color/white"/>
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/commentSend"
+                    android:buttonTint="@android:color/black"
+                    android:checked="false"
+                    android:text="匿名"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/commentET"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="9dp"
+                    android:layout_toLeftOf="@id/checkBox"
+                    android:background="@android:color/white"
+                    android:hint="评论"
+                    android:padding="5dp"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/publishFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="center|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_camera"/>
 </FrameLayout>

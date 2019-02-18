@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +16,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.lzf.myhfuteducn.R;
+import com.lzf.myhfuteducn.bean.Comment;
 import com.lzf.myhfuteducn.bean.Lesson;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -83,6 +89,7 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
         private View storeConvertView; // 存放convertView
         private int position; // 位置、定位
         private Context context; // Context上下文
+        private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM--dd HH:mm");
 
         // 构造方法，完成相关初始化
         private ViewHolder(Context context, ViewGroup parent,
@@ -232,6 +239,22 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
             return this;
         }
 
+
+        //设置网络图片
+        public ViewHolder setImageByGlide(int id, String obj, Context context) {
+            View view = getView(id);
+            if (view instanceof ImageView) {
+                Glide.with(context)
+                        .load(obj) //UrlUtils.URL_Image +
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//图片缓存策略,这个一般必须有
+                        .error(R.mipmap.ic_launcher)// 加载图片失败的时候显示的默认图
+                        .dontAnimate().placeholder(R.mipmap.ic_launcher) //解决Glide 图片闪烁问题
+                        .into((ImageView) view);
+            } else {
+            }
+            return this;
+        }
+
         /**
          * 动态添加成绩的子视图
          *
@@ -239,7 +262,7 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
          * @param examgradeList
          * @return
          */
-        public ViewHolder dynamicAddTV(int id, List<Lesson.Examgrade> examgradeList) {
+        public ViewHolder dynamicAddExamgrade(int id, List<Lesson.Examgrade> examgradeList) {
             try {
                 LinearLayout view = getView(id);
                 view.removeAllViews();
@@ -266,6 +289,48 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
                     type_score.setTextColor(Color.WHITE);
                     linearLayout.addView(type_score);
                     view.addView(linearLayout);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return this;
+        }
+
+        /**
+         * 动态添加评论的子视图
+         *
+         * @param id
+         * @param commentList
+         * @return
+         */
+        public ViewHolder dynamicAddComment(int id, List<Comment> commentList) {
+            try {
+                LinearLayout view = getView(id);
+                view.removeAllViews();
+                for (Comment comment : commentList) {
+                    LinearLayout verticalLinearLayout = new LinearLayout(context);
+                    verticalLinearLayout.setOrientation(LinearLayout.VERTICAL);
+                    verticalLinearLayout.setPadding(30, 30, 30, 30);
+                    LinearLayout horizontalLinearLayout = new LinearLayout(context);
+                    horizontalLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    horizontalLinearLayout.setWeightSum(2.0f);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.weight = 1;
+                    TextView commentUserName = new TextView(context);
+                    commentUserName.setText(((comment.isCommentIsAnonymity()) ? "匿名用户" : comment.getCommentUserName()));
+                    commentUserName.setTextColor(Color.parseColor("#3F51B5"));
+                    commentUserName.setLayoutParams(layoutParams);
+                    horizontalLinearLayout.addView(commentUserName);
+                    TextView commentTime = new TextView(context);
+                    commentTime.setText(simpleDateFormat.format(comment.getCommentTime()));
+                    commentTime.setGravity(Gravity.RIGHT);
+                    commentTime.setLayoutParams(layoutParams);
+                    horizontalLinearLayout.addView(commentTime);
+                    verticalLinearLayout.addView(horizontalLinearLayout);
+                    TextView commentTxt = new TextView(context);
+                    commentTxt.setText("\t" + comment.getCommentTxt());
+                    verticalLinearLayout.addView(commentTxt);
+                    view.addView(verticalLinearLayout);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
