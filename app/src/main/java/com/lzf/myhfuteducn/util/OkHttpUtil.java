@@ -3,7 +3,6 @@ package com.lzf.myhfuteducn.util;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +32,7 @@ public class OkHttpUtil {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String uploadFiles(String url, Map<String, String> params, Map<String, File> files) {
-        Log.v("请求", url + "\n" + params.toString() + "\n" + files.toString());
+        //        Log.v("请求", url + "\n" + params.toString() + "\n" + files.toString());
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         MultipartBody.Builder builder = new MultipartBody.Builder();
         // 设置类型
@@ -59,7 +58,7 @@ public class OkHttpUtil {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        Log.v("响应", url + "\n" + message);
+        //        Log.v("响应", url + "\n" + message);
         return message;
     }
 
@@ -71,7 +70,7 @@ public class OkHttpUtil {
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getData(String url) {
-        Log.v("请求", url);
+        //        Log.v("请求", url);
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
@@ -79,7 +78,7 @@ public class OkHttpUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.v("响应", url + "\n" + message);
+        //        Log.v("响应", url + "\n" + message);
         return message;
     }
 
@@ -92,7 +91,7 @@ public class OkHttpUtil {
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String submit(String url, Map<String, String> params) {
-        Log.v("请求", url + "\n" + params.toString());
+        //        Log.v("请求", url + "\n" + params.toString());
         String message = "连接不到服务器，请检查你的网络或稍后重试。"; // 连接不到服务器，请检查你的网络或稍后重试
         FormBody.Builder builder = new FormBody.Builder();
         if (params != null && params.size() > 0) {
@@ -107,7 +106,7 @@ public class OkHttpUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Log.v("响应", url + "\n" + message);
+        //        Log.v("响应", url + "\n" + message);
         return message;
     }
 }

@@ -5,7 +5,8 @@
               android:layout_height="wrap_content"
               android:background="@drawable/rounded_rectangle_login"
               android:backgroundTint="@color/colorAccent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,14 +17,14 @@
             android:id="@+id/course_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
             android:padding="5dp"
             android:text="系统工程：优"
             android:textColor="@android:color/white"
             android:textSize="15sp"/>
 
-        <TextView
+        <!--<TextView
             android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -33,7 +34,7 @@
             android:padding="5dp"
             android:text="分数：92.5"
             android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            android:textSize="12sp"/>-->
 
         <TextView
             android:id="@+id/course_credit"
@@ -43,8 +44,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="学分：0"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/course_gp"
@@ -53,8 +53,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="绩点：3.9"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"/>
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <LinearLayout

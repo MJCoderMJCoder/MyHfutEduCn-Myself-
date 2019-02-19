@@ -269,7 +269,8 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
                 for (Lesson.Examgrade examgrade : examgradeList) {
                     LinearLayout linearLayout = new LinearLayout(context);
                     linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    linearLayout.setPadding(250, 0, 0, 0);
+                    linearLayout.setGravity(Gravity.RIGHT);
+                    linearLayout.setPadding(15, 0, 15, 0);
                     TextView type = new TextView(context);
                     type.setTextSize(14);
                     type.setText(examgrade.getType() + "：" + examgrade.getScore_text());
