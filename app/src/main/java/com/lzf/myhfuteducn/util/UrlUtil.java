@@ -6,7 +6,7 @@ package com.lzf.myhfuteducn.util;
  */
 public interface UrlUtil {
     String EDU_HOST = "http://jxglstu.hfut.edu.cn:7070/appservice/";
-    String MY_HOST = "http://192.168.17.251:8080/MyHfutEduCn/";
+    String MY_HOST = "http://47.97.199.20:8080/MyHfutEduCn/";
     //登录
     String LOGIN = EDU_HOST + "home/appLogin/login.action";
     //查询学历信息
