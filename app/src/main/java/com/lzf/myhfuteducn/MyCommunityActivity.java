@@ -78,7 +78,7 @@ public class MyCommunityActivity extends AppCompatActivity {
                             params.put("logUserDepart", SharedPreferencesUtil.get(MyCommunityActivity.this, "depart_name", "") + "");
                             params.put("logUserMajor", SharedPreferencesUtil.get(MyCommunityActivity.this, "major_name", "") + "");
                             params.put("logUserClass", SharedPreferencesUtil.get(MyCommunityActivity.this, "adminclass_name", "") + "");
-                            final String response = OkHttpUtil.submit(UrlUtil.LOG_DIMSELECT, params);
+                            final String response = OkHttpUtil.submit(UrlUtil.LOG_SELECT, params);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -194,7 +194,7 @@ public class MyCommunityActivity extends AppCompatActivity {
                 params.put("logUserDepart", SharedPreferencesUtil.get(MyCommunityActivity.this, "depart_name", "") + "");
                 params.put("logUserMajor", SharedPreferencesUtil.get(MyCommunityActivity.this, "major_name", "") + "");
                 params.put("logUserClass", SharedPreferencesUtil.get(MyCommunityActivity.this, "adminclass_name", "") + "");
-                final String response = OkHttpUtil.submit(UrlUtil.LOG_DIMSELECT, params);
+                final String response = OkHttpUtil.submit(UrlUtil.LOG_SELECT, params);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -212,6 +212,29 @@ public class MyCommunityActivity extends AppCompatActivity {
                                         holder.setOnClickListener(R.id.delete, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
+                                                new Thread() {
+                                                    @Override
+                                                    public void run() {
+                                                        super.run();
+                                                        Map<String, String> params = new HashMap<String, String>();
+                                                        params.put("logId", obj.getLogId() + "");
+                                                        final String response = OkHttpUtil.submit(UrlUtil.LOG_DELETE, params);
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                try {
+                                                                    JSONObject responseJsonObject = new JSONObject(response);
+                                                                    if (responseJsonObject.getBoolean("success")) {
+                                                                        logReusableAdapter.delete(obj);
+                                                                    }
+                                                                } catch (JSONException e) {
+                                                                    Toast.makeText(MyCommunityActivity.this, response, Toast.LENGTH_SHORT).show();
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }.start();
                                             }
                                         });
                                         holder.setText(R.id.logPraise, "赞（" + obj.getLogPraise() + "）");

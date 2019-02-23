@@ -7,6 +7,8 @@ package com.lzf.myhfuteducn.util;
 public interface UrlUtil {
     String EDU_HOST = "http://jxglstu.hfut.edu.cn:7070/appservice/";
     String MY_HOST = "http://47.97.199.20:8080/MyHfutEduCn/";
+    //    String MY_HOST = "http://192.168.17.251:8080/MyHfutEduCn/";
+
     //登录
     String LOGIN = EDU_HOST + "home/appLogin/login.action";
     //查询学历信息
@@ -21,10 +23,14 @@ public interface UrlUtil {
     String EDIT_PHONE_EMAIL = EDU_HOST + "home/appLogin/editPhoneOrEmail.action";
     //上传发表日志
     String LOG_INSERT = MY_HOST + "log/insert";
-    //查询已经发布的日志
+    //模糊查询已经发布的日志
     String LOG_DIMSELECT = MY_HOST + "log/dimSelect";
+    //查询已经发布的日志
+    String LOG_SELECT = MY_HOST + "log/select";
     //日志点赞
     String LOG_PRAISE = MY_HOST + "log/praise";
+    //日志删除
+    String LOG_DELETE = MY_HOST + "log/delete";
     //新建评论
     String COMMENT_INSERT = MY_HOST + "comment/insert";
 }
