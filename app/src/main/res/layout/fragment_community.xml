@@ -42,7 +42,7 @@
             android:layout_below="@id/searchRL"
             android:background="#0F000000"
             android:divider="@null"
-            android:dividerHeight="10dp">
+            android:dividerHeight="20dp">
         </ListView>
 
         <RelativeLayout

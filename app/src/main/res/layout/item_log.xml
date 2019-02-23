@@ -27,7 +27,7 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/logPraise"
             android:text="匿名用户"
-            android:textColor="@color/colorPrimary"/>
+            android:textColor="@android:color/black"/>
 
         <TextView
             android:id="@+id/logTime"
@@ -60,14 +60,57 @@
         android:paddingRight="20dp"
         android:paddingTop="10dp"
         android:text="一边怀念，一边继续。"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/colorPrimary"/>
 
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/logPraiseLink"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="赞（0）"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/commentTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="评论"
+            android:textColor="@color/colorPrimary"/>
+
+        <TextView
+            android:id="@+id/lookDetail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="查看详情"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/commentLL"

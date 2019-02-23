@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="?attr/actionBarSize"
         android:layout_marginBottom="10dp"
         android:background="@color/colorPrimary"
         android:padding="5dp">
@@ -36,17 +36,15 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
-        <CheckBox
-            android:id="@+id/checkBox"
+        <ImageView
+            android:id="@+id/myCommunity"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:buttonTint="@android:color/white"
-            android:checked="false"
-            android:text="匿名"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:onClick="doClick"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:src="@drawable/ic_camera"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -119,15 +117,38 @@
             android:padding="10dp">
         </EditText>
 
-        <Button
-            android:id="@+id/publish"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/rounded_rectangle_login"
-            android:backgroundTint="@color/colorPrimary"
-            android:onClick="doClick"
-            android:text="发表"
-            android:textColor="@android:color/white"/>
+            android:backgroundTint="@color/colorPrimary">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:buttonTint="@android:color/white"
+                android:checked="false"
+                android:text="匿名"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+            <Button
+                android:id="@+id/publish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/checkBox"
+                android:background="@null"
+                android:onClick="doClick"
+                android:text="发表"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+        </RelativeLayout>
+
     </LinearLayout>
 </LinearLayout>

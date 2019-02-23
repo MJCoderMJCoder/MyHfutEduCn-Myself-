@@ -311,7 +311,7 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
                 for (Comment comment : commentList) {
                     LinearLayout verticalLinearLayout = new LinearLayout(context);
                     verticalLinearLayout.setOrientation(LinearLayout.VERTICAL);
-                    verticalLinearLayout.setPadding(30, 30, 30, 30);
+                    verticalLinearLayout.setPadding(ScreenUtils.dp2px(context, 20), ScreenUtils.dp2px(context, 10), ScreenUtils.dp2px(context, 20), ScreenUtils.dp2px(context, 10));
                     LinearLayout horizontalLinearLayout = new LinearLayout(context);
                     horizontalLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                     horizontalLinearLayout.setWeightSum(2.0f);
@@ -319,7 +319,7 @@ public abstract class ReusableAdapter<T> extends BaseAdapter {
                     layoutParams.weight = 1;
                     TextView commentUserName = new TextView(context);
                     commentUserName.setText(((comment.isCommentIsAnonymity()) ? "匿名用户" : comment.getCommentUserName()));
-                    commentUserName.setTextColor(Color.parseColor("#3F51B5"));
+                    commentUserName.setTextColor(Color.BLACK);
                     commentUserName.setLayoutParams(layoutParams);
                     horizontalLinearLayout.addView(commentUserName);
                     TextView commentTime = new TextView(context);

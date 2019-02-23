@@ -129,6 +129,9 @@ public class LogActivity extends AppCompatActivity {
                     }.start();
                 }
                 break;
+            case R.id.myCommunity:
+                startActivity(new Intent(this, MyCommunityActivity.class));
+                break;
             default:
                 break;
         }

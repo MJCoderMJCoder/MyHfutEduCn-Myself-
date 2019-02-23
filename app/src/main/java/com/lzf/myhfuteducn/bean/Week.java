@@ -1,10 +1,12 @@
 package com.lzf.myhfuteducn.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by MJCoder on 2019-02-11.
  */
 
-public class Week {
+public class Week implements Serializable {
     private String begin_on;
     private String end_on;
     private int index;

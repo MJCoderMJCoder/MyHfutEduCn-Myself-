@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     public static int semestercode; //学期代码
     public static String semestername; //学期名称
     public static int weekIndx; //第几周
+    private long exitTime = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbarTitle = toolbar.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText("课程表");
+        //        toolbarTitle.setText("课程表");
         setSupportActionBar(toolbar);
 
         //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -111,8 +112,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (communityFragment != null && communityFragment.isVisible()) {
                 if (!communityFragment.onBackPressed()) {
-                    super.onBackPressed();
+                    menu.performIdentifierAction(R.id.nav_course, 0);
                 }
+            } else if (courseFragment == null || !courseFragment.isVisible()) {
+                menu.performIdentifierAction(R.id.nav_course, 0);
+            } else if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
             } else {
                 super.onBackPressed();
             }
@@ -223,7 +229,9 @@ public class MainActivity extends AppCompatActivity
             }
         } else if (id == R.id.nav_switch) {
             toolbarTitle.setText("切换账号");
-            startActivity(new Intent(this, LoginActivity.class));
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("isBackMain", true); //可以返回至主界面
+            startActivity(intent);
             finish();
         }
         fTransaction.commit();

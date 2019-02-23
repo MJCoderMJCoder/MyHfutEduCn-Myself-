@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private String username;
     private String password;
+    private long exitTime = 0;
 
     private EditText studentIdET;
     private EditText passwordET;
@@ -162,5 +163,19 @@ public class LoginActivity extends AppCompatActivity {
             imm.showSoftInput(passwordET, 0); //弹出软键盘
         }
         return valid;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getBooleanExtra("isBackMain", false)) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed(); // 退出程序
+        }
     }
 }

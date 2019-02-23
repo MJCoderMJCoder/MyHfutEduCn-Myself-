@@ -1,12 +1,13 @@
 package com.lzf.myhfuteducn.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by MJCoder on 2019-02-12.
  */
 
-public class Lesson {
+public class Lesson implements Serializable {
 
     private String code;
     private String course_code;

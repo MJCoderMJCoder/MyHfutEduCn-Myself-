@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.transition.Visibility;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.lzf.myhfuteducn.LogActivity;
+import com.lzf.myhfuteducn.LogDetailActivity;
 import com.lzf.myhfuteducn.R;
 import com.lzf.myhfuteducn.bean.Comment;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
@@ -36,7 +36,6 @@ import com.lzf.myhfuteducn.util.UrlUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -274,37 +273,77 @@ public class CommunityFragment extends Fragment {
                                     @Override
                                     public void bindView(final ViewHolder holder, final com.lzf.myhfuteducn.bean.Log obj) {
                                         holder.setText(R.id.logPraise, "赞（" + obj.getLogPraise() + "）");
+                                        holder.setText(R.id.logPraiseLink, "赞（" + obj.getLogPraise() + "）");
                                         holder.setOnClickListener(R.id.logPraise, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                new Thread() {
-                                                    @Override
-                                                    public void run() {
-                                                        super.run();
-                                                        Map<String, String> params = new HashMap<String, String>();
-                                                        params.put("logId", obj.getLogId() + "");
-                                                        final String response = OkHttpUtil.submit(UrlUtil.LOG_PRAISE, params);
-                                                        getActivity().runOnUiThread(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                try {
-                                                                    JSONObject responseJsonObject = new JSONObject(response);
-                                                                    if (responseJsonObject.getBoolean("success")) {
-                                                                        obj.setLogPraise(obj.getLogPraise() + 1);
-                                                                        notifyDataSetChanged();
+                                                if (SharedPreferencesUtil.contains(context, SharedPreferencesUtil.get(context, "user_code", "") + "" + obj.getLogId())) {
+                                                    Toast.makeText(context, "该日志你已经点过赞了！", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    SharedPreferencesUtil.put(context, SharedPreferencesUtil.get(context, "user_code", "") + "" + obj.getLogId(), obj.getLogTime());
+                                                    new Thread() {
+                                                        @Override
+                                                        public void run() {
+                                                            super.run();
+                                                            Map<String, String> params = new HashMap<String, String>();
+                                                            params.put("logId", obj.getLogId() + "");
+                                                            final String response = OkHttpUtil.submit(UrlUtil.LOG_PRAISE, params);
+                                                            getActivity().runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    try {
+                                                                        JSONObject responseJsonObject = new JSONObject(response);
+                                                                        if (responseJsonObject.getBoolean("success")) {
+                                                                            obj.setLogPraise(obj.getLogPraise() + 1);
+                                                                            notifyDataSetChanged();
+                                                                        }
+                                                                    } catch (JSONException e) {
+                                                                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                                                                        e.printStackTrace();
                                                                     }
-                                                                } catch (JSONException e) {
-                                                                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
-                                                                    e.printStackTrace();
                                                                 }
-                                                            }
-                                                        });
-                                                    }
-                                                }.start();
+                                                            });
+                                                        }
+                                                    }.start();
+                                                }
+                                            }
+                                        });
+                                        holder.setOnClickListener(R.id.logPraiseLink, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (SharedPreferencesUtil.contains(context, SharedPreferencesUtil.get(context, "user_code", "") + "" + obj.getLogId())) {
+                                                    Toast.makeText(context, "该日志你已经点过赞了！", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    SharedPreferencesUtil.put(context, SharedPreferencesUtil.get(context, "user_code", "") + "" + obj.getLogId(), obj.getLogTime());
+                                                    new Thread() {
+                                                        @Override
+                                                        public void run() {
+                                                            super.run();
+                                                            Map<String, String> params = new HashMap<String, String>();
+                                                            params.put("logId", obj.getLogId() + "");
+                                                            final String response = OkHttpUtil.submit(UrlUtil.LOG_PRAISE, params);
+                                                            getActivity().runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    try {
+                                                                        JSONObject responseJsonObject = new JSONObject(response);
+                                                                        if (responseJsonObject.getBoolean("success")) {
+                                                                            obj.setLogPraise(obj.getLogPraise() + 1);
+                                                                            notifyDataSetChanged();
+                                                                        }
+                                                                    } catch (JSONException e) {
+                                                                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }.start();
+                                                }
                                             }
                                         });
                                         holder.setText(R.id.logUserName, ((obj.isLogIsAnonymity()) ? "匿名用户" : obj.getLogUserName()));
-                                        holder.setText(R.id.logTime, simpleDateFormat.format(obj.getLogTime()));
+                                        holder.setText(R.id.logTime, "发表于 " + simpleDateFormat.format(obj.getLogTime()));
                                         holder.setImageByGlide(R.id.logImg, UrlUtil.MY_HOST + obj.getLogImg(), context);
                                         holder.setText(R.id.logTxt, obj.getLogTxt());
                                         holder.setOnClickListener(R.id.logTxt, new View.OnClickListener() {
@@ -319,8 +358,28 @@ public class CommunityFragment extends Fragment {
                                                 imm.showSoftInput(commentET, 0); //弹出软键盘
                                             }
                                         });
-                                        if (obj.getComments() != null && obj.getComments().size() > 0) {
-                                            holder.setVisibility(R.id.line, View.VISIBLE);
+                                        holder.setOnClickListener(R.id.commentTV, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                position = holder.getItemPosition();
+                                                log = obj;
+                                                commentRL.setVisibility(View.VISIBLE);
+                                                commentET.setHint("评论");
+                                                commentET.requestFocus();
+                                                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                                                imm.showSoftInput(commentET, 0); //弹出软键盘
+                                            }
+                                        });
+                                        holder.setOnClickListener(R.id.lookDetail, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(context, LogDetailActivity.class);
+                                                intent.putExtra("log", obj);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                        if (obj.getComments() != null) { //&& obj.getComments().size() > 0
+                                            //                                            holder.setVisibility(R.id.line, View.VISIBLE);
                                             holder.dynamicAddComment(R.id.commentLL, obj.getComments());
                                         }
                                     }

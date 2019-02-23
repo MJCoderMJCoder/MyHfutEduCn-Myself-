@@ -635,6 +635,13 @@ public class CourseFragment extends Fragment {
         }.start();
     }
 
+    /**
+     * 课程详情对话框
+     *
+     * @param course_card
+     * @param jsonObjectList
+     * @throws JSONException
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void courseDetailDialog(View course_card, List<JSONObject> jsonObjectList) throws JSONException {
         //初始化Builder
