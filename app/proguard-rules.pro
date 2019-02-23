@@ -30,7 +30,7 @@
   public *;
 }
 # for DexGuard only
-# -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 ##---------------End: proguard configuration for Glide  ----------
 
 ##---------------Begin: proguard configuration for Gson  ----------

@@ -1,0 +1,130 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@android:color/white"
+             tools:context="com.lzf.myhfuteducn.fragment.CommunityFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <RelativeLayout
+            android:id="@+id/topRL"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorPrimary"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_chevron_left"
+                android:gravity="center"
+                android:onClick="doClick"
+                android:text="返回"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="我的社区"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/searchRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/topRL"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/rounded_rectangle"
+            android:padding="5dp">
+
+            <EditText
+                android:id="@+id/searchET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableLeft="@drawable/ic_search"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:hint="回车搜索"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textSize="14sp">
+            </EditText>
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/logListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/searchRL"
+            android:background="#0F000000"
+            android:divider="@null"
+            android:dividerHeight="20dp">
+        </ListView>
+
+        <RelativeLayout
+            android:id="@+id/commentRL"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#0F000000">
+
+                <Button
+                    android:id="@+id/commentSend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="9dp"
+                    android:background="@drawable/rounded_rectangle_login"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="发  送"
+                    android:textColor="@android:color/white"/>
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/commentSend"
+                    android:buttonTint="@android:color/black"
+                    android:checked="false"
+                    android:text="匿名"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/commentET"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="9dp"
+                    android:layout_toLeftOf="@id/checkBox"
+                    android:background="@android:color/white"
+                    android:hint="评论"
+                    android:padding="5dp"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>
