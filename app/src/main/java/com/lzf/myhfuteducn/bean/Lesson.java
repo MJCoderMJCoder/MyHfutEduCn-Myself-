@@ -118,7 +118,7 @@ public class Lesson implements Serializable {
                 '}';
     }
 
-    public class Examgrade {
+    public class Examgrade implements Serializable {
         private String passed;
         private String score;
         private String score_text;
