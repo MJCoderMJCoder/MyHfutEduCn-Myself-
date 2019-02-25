@@ -7,14 +7,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
+import com.lzf.myhfuteducn.bean.Log;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
 import com.lzf.myhfuteducn.util.UrlUtil;
@@ -24,8 +31,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,9 +59,13 @@ public class SignFragment extends Fragment {
     private View view;
     private Button sign;
     private Context context;
-    private JSONObject course;
+    //    private JSONObject course;
+    private List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
     private SimpleDateFormat sdfYyyyMMdd = new SimpleDateFormat("yyyyMMdd");
     private SimpleDateFormat sdfHHmm = new SimpleDateFormat("HHmm");
+    private ViewFlipper viewFlipper;
+    private final static int MIN_MOVE = 200;   //最小距离
+    private float actionDownX = 0;
 
     public SignFragment() {
         // Required empty public constructor
@@ -91,6 +104,7 @@ public class SignFragment extends Fragment {
         // Inflate the item_week_layout for this fragment
         try {
             view = inflater.inflate(R.layout.fragment_sign, container, false);
+            viewFlipper = view.findViewById(R.id.viewFlipper);
             sign = view.findViewById(R.id.sign);
             int date = Integer.parseInt(sdfYyyyMMdd.format(System.currentTimeMillis()));
             if (MainActivity.semesterWeekList != null) {
@@ -122,6 +136,28 @@ public class SignFragment extends Fragment {
             e.printStackTrace();
         }
         return view;
+    }
+
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                actionDownX = event.getRawX();
+                break;
+            case MotionEvent.ACTION_UP:
+                if (actionDownX - event.getX() > MIN_MOVE) {
+                    viewFlipper.setInAnimation(context, R.anim.right_in);
+                    viewFlipper.setOutAnimation(context, R.anim.right_out);
+                    viewFlipper.showNext();
+                } else if (event.getX() - actionDownX > MIN_MOVE) {
+                    viewFlipper.setInAnimation(context, R.anim.left_in);
+                    viewFlipper.setOutAnimation(context, R.anim.left_out);
+                    viewFlipper.showPrevious();
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -493,35 +529,34 @@ public class SignFragment extends Fragment {
                                 if (objJson != null) {
                                     JSONArray businessDataJson = objJson.getJSONArray("business_data");
                                     if (businessDataJson != null) {
+                                        jsonObjectList.clear();
+                                        int time = Integer.parseInt(sdfHHmm.format(System.currentTimeMillis()));
                                         for (int i = 0; i < businessDataJson.length(); i++) {
-                                            course = businessDataJson.getJSONObject(i);
+                                            JSONObject course = businessDataJson.getJSONObject(i);
                                             int weekday = course.getInt("weekday");
                                             if (weekday == 7 && dayOfWeek == 1) { //星期日
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 1 && dayOfWeek == 2) { //星期一
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 2 && dayOfWeek == 3) { //星期二
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 3 && dayOfWeek == 4) { //星期三
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 4 && dayOfWeek == 5) { //星期四
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 5 && dayOfWeek == 6) { //星期五
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             } else if (weekday == 6 && dayOfWeek == 7) { //星期六
-                                                signDraw(semestercode, weekIndx, weekday);
-                                                return;
+                                                signCourseInput(time, course);
                                             }
                                         }
-                                        sign.setEnabled(false);
-                                        sign.getBackground().setTint(Color.GRAY);
-                                        sign.setText("暂无课堂\n\n无需签到");
+                                        if (jsonObjectList.size() > 0) {
+                                            signDraw(time, semestercode, weekIndx);
+                                        } else {
+                                            sign.setEnabled(false);
+                                            sign.getBackground().setTint(Color.GRAY);
+                                            sign.setText("暂无课堂\n\n无需签到");
+                                        }
                                     }
                                 }
                             }
@@ -535,52 +570,89 @@ public class SignFragment extends Fragment {
     }
 
     /**
-     * 签到按钮绘制
+     * 签到课程录取
      *
-     * @param semestercode
-     * @param weekIndx
-     * @param weekday
      * @throws JSONException
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void signDraw(final String semestercode, final String weekIndx, final int weekday) throws JSONException {
-        int time = Integer.parseInt(sdfHHmm.format(System.currentTimeMillis()));
+    private void signCourseInput(int time, JSONObject course) throws JSONException {
         String[] start_time = course.getString("start_time").split(":");
         int signStart = 0;
-        if (Integer.parseInt(start_time[1]) > 20) {
-            signStart = Integer.parseInt(start_time[0] + ((Integer.parseInt(start_time[1]) - 20) + ""));
+        if (Integer.parseInt(start_time[1]) >= 20) {
+            int temp = Integer.parseInt(start_time[1]) - 20;
+            signStart = Integer.parseInt(start_time[0] + "" + ((temp + "").length() < 2 ? ("0" + temp) : temp));
         } else {
-            signStart = Integer.parseInt(((Integer.parseInt(start_time[0]) - 1) + "") + ((60 + Integer.parseInt(start_time[1]) - 20) + ""));
+            signStart = Integer.parseInt((Integer.parseInt(start_time[0]) - 1) + "" + (60 + Integer.parseInt(start_time[1]) - 20));
+        }
+        if (time >= signStart && time < Integer.parseInt(course.getString("end_time").replace(":", ""))) {
+            jsonObjectList.add(course);
+        }
+    }
+
+    /**
+     * 签到按钮绘制
+     * <p>
+     *
+     * @param semestercode
+     * @param weekIndx
+     * @throws JSONException
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void signDraw(int time, final String semestercode, final String weekIndx) throws JSONException {
+        JSONObject course = jsonObjectList.get(0);
+        final int weekday = course.getInt("weekday");
+        String[] start_time = course.getString("start_time").split(":");
+        int signStart = 0;
+        if (Integer.parseInt(start_time[1]) >= 20) {
+            int temp = Integer.parseInt(start_time[1]) - 20;
+            signStart = Integer.parseInt(start_time[0] + "" + ((temp + "").length() < 2 ? ("0" + temp) : temp));
+        } else {
+            signStart = Integer.parseInt((Integer.parseInt(start_time[0]) - 1) + "" + (60 + Integer.parseInt(start_time[1]) - 20));
         }
         int signEnd = 0;
         if (Integer.parseInt(start_time[1]) >= 30) {
-            signEnd = Integer.parseInt(((Integer.parseInt(start_time[0]) + 1) + "") + ((Integer.parseInt(start_time[1]) - 30) + ""));
+            int temp = Integer.parseInt(start_time[1]) - 30;
+            signEnd = Integer.parseInt((Integer.parseInt(start_time[0]) + 1) + "" + ((temp + "").length() < 2 ? ("0" + temp) : temp));
         } else {
             signEnd = Integer.parseInt(start_time[0] + ((Integer.parseInt(start_time[1]) + 30) + ""));
         }
-        if (time >= signStart && time < signEnd) {
+        if (time >= signStart && time <= signEnd) {
             if (SharedPreferencesUtil.contains(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + signStart + "-" + signEnd)) {
                 sign.setEnabled(false);
                 sign.getBackground().setTint(Color.parseColor("#3F51B5"));
-                sign.setText("已签");
-            } else {
+                sign.setText("" + SharedPreferencesUtil.get(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + signStart + "-" + signEnd, ""));
+            } else if (time > Integer.parseInt(course.getString("start_time").replace(":", ""))) {
                 sign.setEnabled(true);
                 sign.getBackground().setTint(Color.parseColor("#FF4081"));
                 sign.setText("签到");
-                final int finalSignEnd = signEnd;
                 final int finalSignStart = signStart;
+                final int finalSignEnd = signEnd;
                 sign.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SharedPreferencesUtil.put(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + finalSignStart + "-" + finalSignEnd, true);
+                        SharedPreferencesUtil.put(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + finalSignStart + "-" + finalSignEnd, "迟到");
+                        sign.setEnabled(false);
+                        sign.getBackground().setTint(Color.parseColor("#3F51B5"));
+                        sign.setText("迟到");
+                    }
+                });
+            } else if (time <= Integer.parseInt(course.getString("start_time").replace(":", ""))) {
+                sign.setEnabled(true);
+                sign.getBackground().setTint(Color.parseColor("#FF4081"));
+                sign.setText("签到");
+                final int finalSignStart = signStart;
+                final int finalSignEnd = signEnd;
+                sign.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SharedPreferencesUtil.put(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + finalSignStart + "-" + finalSignEnd, "已签");
                         sign.setEnabled(false);
                         sign.getBackground().setTint(Color.parseColor("#3F51B5"));
                         sign.setText("已签");
                     }
                 });
             }
-        } else if (
-                time > signEnd && time < Integer.parseInt(course.getString("start_time").replace(":", ""))) {
+        } else if (time > signEnd && time < Integer.parseInt(course.getString("end_time").replace(":", ""))) {
             sign.setEnabled(false);
             sign.getBackground().setTint(Color.GRAY);
             sign.setText("旷课");
@@ -588,6 +660,50 @@ public class SignFragment extends Fragment {
             sign.setEnabled(false);
             sign.getBackground().setTint(Color.GRAY);
             sign.setText("暂无课堂\n\n无需签到");
+        }
+        for (JSONObject jsonObject : jsonObjectList) {
+            LinearLayout linearLayout = new LinearLayout(context);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.setMargins(0, 20, 0, 0);
+            linearLayout.setLayoutParams(layoutParams); //设置布局高度,即跨多少节课);
+            linearLayout.setPadding(30, 30, 30, 30);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            linearLayout.setGravity(Gravity.CENTER);
+            TextView course_name = new TextView(context);
+            course_name.setText("课程名称：" + jsonObject.getString("course_name"));
+            linearLayout.addView(course_name);
+            TextView activity_weekstate = new TextView(context);
+            activity_weekstate.setPadding(250, 0, 0, 0);
+            activity_weekstate.setText(jsonObject.getString("activity_weekstate"));
+            linearLayout.addView(activity_weekstate);
+            TextView timeTV = new TextView(context);
+            timeTV.setPadding(250, 0, 0, 0);
+            timeTV.setText(jsonObject.getString("start_time") + " - " + jsonObject.getString("end_time"));
+            linearLayout.addView(timeTV);
+            JSONArray rooms = jsonObject.getJSONArray("rooms");
+            for (int i = 0; i < rooms.length(); i++) {
+                JSONObject room = rooms.getJSONObject(i);
+                TextView campus_name = new TextView(context);
+                campus_name.setText("校区：" + room.getString("campus_name") + "（" + room.getString("floor_name") + "）");
+                linearLayout.addView(campus_name);
+                TextView room_name = new TextView(context);
+                room_name.setPadding(160, 0, 0, 0);
+                room_name.setText(room.getString("name"));
+                linearLayout.addView(room_name);
+            }
+            JSONArray teachers = jsonObject.getJSONArray("teachers");
+            for (int i = 0; i < teachers.length(); i++) {
+                TextView teacher_name = new TextView(context);
+                teacher_name.setText("教师：" + teachers.getJSONObject(i).getString("name"));
+                linearLayout.addView(teacher_name);
+            }
+            LinearLayout child = new LinearLayout(context);
+            child.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            child.setOrientation(LinearLayout.HORIZONTAL);
+            child.setGravity(Gravity.CENTER);
+            child.addView(linearLayout);
+            viewFlipper.addView(child);
         }
     }
 }

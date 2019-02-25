@@ -101,7 +101,7 @@ public class LogDetailActivity extends AppCompatActivity {
                     }
                 });
                 TextView logUserName = findViewById(R.id.logUserName);
-                logUserName.setText(((log.isLogIsAnonymity()) ? "匿名用户（" + log.getLogUserGender() + "）" : log.getLogUserName()) + "（" + log.getLogUserGender() + "）");
+                logUserName.setText(log.isLogIsAnonymity() ? ("匿名用户（" + log.getLogUserGender() + "）") : (log.getLogUserName() + "（" + log.getLogUserGender() + "）"));
                 if (!log.isLogIsAnonymity()) {
                     infoDetailDialog(logUserName, log);
                 }
@@ -203,7 +203,7 @@ public class LogDetailActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
                 layoutParams.weight = 1;
                 TextView commentUserName = new TextView(this);
-                commentUserName.setText(((comment.isCommentIsAnonymity()) ? "匿名用户（" + comment.getCommentUserGender() + "）" : comment.getCommentUserName() + "（" + comment.getCommentUserGender() + "）"));
+                commentUserName.setText(comment.isCommentIsAnonymity() ? ("匿名用户（" + comment.getCommentUserGender() + "）") : (comment.getCommentUserName() + "（" + comment.getCommentUserGender() + "）"));
                 commentUserName.setTextColor(Color.parseColor("#3F51B5"));
                 commentUserName.setLayoutParams(layoutParams);
                 if (!comment.isCommentIsAnonymity()) {
