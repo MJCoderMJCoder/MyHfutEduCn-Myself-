@@ -6,85 +6,100 @@
              tools:context="com.lzf.myhfuteducn.fragment.AboutFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:background="@mipmap/atlantis"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@mipmap/atlantis"/>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Atlantis."
-                android:textColor="@android:color/black"
-                android:textSize="25sp"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="凛冬已至。"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp">
+                android:orientation="vertical"
+                android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/account"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:gravity="center"
-                    android:padding="5dp"
-                    android:text="账号"/>
+                    android:text="Atlantis."
+                    android:textColor="@android:color/black"
+                    android:textSize="25sp"/>
 
                 <TextView
-                    android:id="@+id/accountValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/account"
                     android:gravity="center"
-                    android:padding="5dp"
-                    android:text="zwx19980125@qq.com（562872918 ）"
-                    android:textColor="@android:color/black"/>
+                    android:padding="10dp"
+                    android:text="凛冬已至。"/>
 
-                <TextView
-                    android:id="@+id/version"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/account"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="版本"/>
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/versionValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/account"
-                    android:layout_toRightOf="@id/version"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="Version 1.1.0 （ Copyright ©2019 版权)"
-                    android:textColor="@android:color/black"/>
+                    <TextView
+                        android:id="@+id/account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="账号"/>
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/accountValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/account"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="zwx19980125@qq.com（562872918 ）"
+                        android:textColor="@android:color/black"/>
+
+                    <TextView
+                        android:id="@+id/version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/account"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="版本"/>
+
+                    <TextView
+                        android:id="@+id/versionValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/account"
+                        android:layout_toRightOf="@id/version"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="Version 1.1.0 （ Copyright ©2019 版权)"
+                        android:textColor="@android:color/black"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:alpha="0.2"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="纸纷飞（598157378@qq.com）"
+            android:textSize="8sp"/>
+    </RelativeLayout>
 </FrameLayout>

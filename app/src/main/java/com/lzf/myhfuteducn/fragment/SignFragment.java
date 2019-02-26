@@ -616,7 +616,7 @@ public class SignFragment extends Fragment {
         } else {
             signEnd = Integer.parseInt(start_time[0] + ((Integer.parseInt(start_time[1]) + 30) + ""));
         }
-        if (time >= signStart && time <= signEnd) {
+        if (time >= signStart && time <= Integer.parseInt(course.getString("end_time").replace(":", ""))) {
             if (SharedPreferencesUtil.contains(context, semestercode + "-" + weekIndx + "-" + weekday + "-" + signStart + "-" + signEnd)) {
                 sign.setEnabled(false);
                 sign.getBackground().setTint(Color.parseColor("#3F51B5"));
@@ -651,11 +651,11 @@ public class SignFragment extends Fragment {
                         sign.setText("已签");
                     }
                 });
+            } else if (time > signEnd) {
+                sign.setEnabled(false);
+                sign.getBackground().setTint(Color.GRAY);
+                sign.setText("旷课");
             }
-        } else if (time > signEnd && time < Integer.parseInt(course.getString("end_time").replace(":", ""))) {
-            sign.setEnabled(false);
-            sign.getBackground().setTint(Color.GRAY);
-            sign.setText("旷课");
         } else {
             sign.setEnabled(false);
             sign.getBackground().setTint(Color.GRAY);
