@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class CourseFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    private FragmentActivity fragmentActivity;
     private Context context;
     private View view;
 
@@ -108,6 +110,7 @@ public class CourseFragment extends Fragment {
         // Inflate the item_week_layout for this fragment
         try {
             view = inflater.inflate(R.layout.fragment_course, container, false);
+            fragmentActivity = getActivity();
             TextView semesternameTV = view.findViewById(R.id.semesternameTV);
             semesternameTV.setText(MainActivity.semestername);
 
@@ -503,7 +506,10 @@ public class CourseFragment extends Fragment {
                  "error": null
                  }
                  */
-                getActivity().runOnUiThread(new Runnable() {
+                if (fragmentActivity == null) {
+                    fragmentActivity = getActivity();
+                }
+                fragmentActivity.runOnUiThread(new Runnable() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void run() {
@@ -647,7 +653,10 @@ public class CourseFragment extends Fragment {
         //初始化Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         //加载自定义的那个View,同时设置下
-        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        if (fragmentActivity == null) {
+            fragmentActivity = getActivity();
+        }
+        final LayoutInflater inflater = fragmentActivity.getLayoutInflater();
         View course_detail_dialog = inflater.inflate(R.layout.course_detail_dialog, null, false);
         builder.setView(course_detail_dialog);
         builder.setCancelable(true);

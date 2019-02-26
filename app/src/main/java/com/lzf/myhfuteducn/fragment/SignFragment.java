@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ public class SignFragment extends Fragment {
     //    private OnFragmentInteractionListener mListener;
     private View view;
     private Button sign;
+    private FragmentActivity fragmentActivity;
     private Context context;
     //    private JSONObject course;
     private List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
@@ -104,6 +106,7 @@ public class SignFragment extends Fragment {
         // Inflate the item_week_layout for this fragment
         try {
             view = inflater.inflate(R.layout.fragment_sign, container, false);
+            fragmentActivity = getActivity();
             viewFlipper = view.findViewById(R.id.viewFlipper);
             sign = view.findViewById(R.id.sign);
             int date = Integer.parseInt(sdfYyyyMMdd.format(System.currentTimeMillis()));
@@ -517,7 +520,10 @@ public class SignFragment extends Fragment {
                  */
                 // 获得星期几（注意（这个与Date类是不同的）：1代表星期日、2代表星期1、3代表星期二，以此类推）
                 final int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-                getActivity().runOnUiThread(new Runnable() {
+                if (fragmentActivity == null) {
+                    fragmentActivity = getActivity();
+                }
+                fragmentActivity.runOnUiThread(new Runnable() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void run() {

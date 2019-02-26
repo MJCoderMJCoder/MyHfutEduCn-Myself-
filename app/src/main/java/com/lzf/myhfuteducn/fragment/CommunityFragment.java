@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -61,6 +62,7 @@ public class CommunityFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    private FragmentActivity fragmentActivity;
     private Context context;
     private EditText searchET;
     private RelativeLayout commentRL;
@@ -111,6 +113,7 @@ public class CommunityFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_community, container, false);
+        fragmentActivity = getActivity();
         view.findViewById(R.id.publishFAB).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +144,10 @@ public class CommunityFragment extends Fragment {
                             params.put("logUserMajor", searchET.getText().toString());
                             params.put("logUserClass", searchET.getText().toString());
                             final String response = OkHttpUtil.submit(UrlUtil.LOG_DIMSELECT, params);
-                            getActivity().runOnUiThread(new Runnable() {
+                            if (fragmentActivity == null) {
+                                fragmentActivity = getActivity();
+                            }
+                            fragmentActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -200,7 +206,10 @@ public class CommunityFragment extends Fragment {
                             params.put("replyUserMajor", "");
                             params.put("replyUserClass", "");
                             final String response = OkHttpUtil.submit(UrlUtil.COMMENT_INSERT, params);
-                            getActivity().runOnUiThread(new Runnable() {
+                            if (fragmentActivity == null) {
+                                fragmentActivity = getActivity();
+                            }
+                            fragmentActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -258,7 +267,10 @@ public class CommunityFragment extends Fragment {
                 params.put("logUserMajor", searchET.getText().toString());
                 params.put("logUserClass", searchET.getText().toString());
                 final String response = OkHttpUtil.submit(UrlUtil.LOG_DIMSELECT, params);
-                getActivity().runOnUiThread(new Runnable() {
+                if (fragmentActivity == null) {
+                    fragmentActivity = getActivity();
+                }
+                fragmentActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -288,7 +300,10 @@ public class CommunityFragment extends Fragment {
                                                             Map<String, String> params = new HashMap<String, String>();
                                                             params.put("logId", obj.getLogId() + "");
                                                             final String response = OkHttpUtil.submit(UrlUtil.LOG_PRAISE, params);
-                                                            getActivity().runOnUiThread(new Runnable() {
+                                                            if (fragmentActivity == null) {
+                                                                fragmentActivity = getActivity();
+                                                            }
+                                                            fragmentActivity.runOnUiThread(new Runnable() {
                                                                 @Override
                                                                 public void run() {
                                                                     try {
@@ -322,7 +337,10 @@ public class CommunityFragment extends Fragment {
                                                             Map<String, String> params = new HashMap<String, String>();
                                                             params.put("logId", obj.getLogId() + "");
                                                             final String response = OkHttpUtil.submit(UrlUtil.LOG_PRAISE, params);
-                                                            getActivity().runOnUiThread(new Runnable() {
+                                                            if (fragmentActivity == null) {
+                                                                fragmentActivity = getActivity();
+                                                            }
+                                                            fragmentActivity.runOnUiThread(new Runnable() {
                                                                 @Override
                                                                 public void run() {
                                                                     try {

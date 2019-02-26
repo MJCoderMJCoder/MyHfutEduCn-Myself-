@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class InfosetFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    private FragmentActivity fragmentActivity;
     private Context context;
     private View view;
     private EditText account_email;
@@ -91,6 +93,7 @@ public class InfosetFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_infoset, container, false);
+        fragmentActivity = getActivity();
         TextView user_name = view.findViewById(R.id.user_name);
         user_name.setText("姓名：" + SharedPreferencesUtil.get(context, "user_name", ""));
         TextView user_code = view.findViewById(R.id.user_code);
@@ -143,7 +146,10 @@ public class InfosetFragment extends Fragment {
                              "error": null
                              }
                              */
-                            getActivity().runOnUiThread(new Runnable() {
+                            if (fragmentActivity == null) {
+                                fragmentActivity = getActivity();
+                            }
+                            fragmentActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
