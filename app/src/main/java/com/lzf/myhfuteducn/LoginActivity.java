@@ -24,19 +24,47 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 登录界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ */
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * 学号输入框的具体文本内容
+     */
     private String username;
+    /**
+     * 密码输入框的具体文本内容
+     */
     private String password;
+    /**
+     * 上次触发返回物理按键的时间戳
+     */
     private long exitTime = 0;
-
+    /**
+     * 学号的输入框
+     */
     private EditText studentIdET;
+    /**
+     * 密码的输入框
+     */
     private EditText passwordET;
+    /**
+     * 登录按钮
+     */
     private Button loginBtn;
 
+    //    public static final String AUTO_LOGIN_STATE_ACTION = "com.openim.autoLoginStateActionn";
 
-    public static final String AUTO_LOGIN_STATE_ACTION = "com.openim.autoLoginStateActionn";
-
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +76,11 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn = findViewById(R.id.loginBtn);
     }
 
+    /**
+     * 用户单击界面上的对应视图控件时进行的响应操作
+     *
+     * @param view 用户单击界面上的对应视图控件
+     */
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loginBtn:
@@ -146,7 +179,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * 登录的前端检查：确保学号和密码的内容真实有效。
+     *
+     * @return 检查后的结果（true：学号和密码的内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
+     */
     private boolean loginCheck() {
         boolean valid = true;
         username = studentIdET.getText().toString();
@@ -165,6 +202,9 @@ public class LoginActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     * 用户按了返回物理按键后的事件处理。
+     */
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();

@@ -7,8 +7,20 @@ import android.view.WindowManager;
 
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
 
+/**
+ * APP打开后首先显示的启动界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ */
 public class IndexActivity extends AppCompatActivity {
 
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

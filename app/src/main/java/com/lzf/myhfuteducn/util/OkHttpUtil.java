@@ -16,19 +16,23 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * 处理网络请求的类
- * Created by MJCoder on 2018-08-01.
+ * 处理网络请求的工具类
+ *
+ * @author MJCoder
  */
 public class OkHttpUtil {
+    /**
+     * @see OkHttpClient
+     */
     private static OkHttpClient client = new OkHttpClient();
 
     /**
-     * POST请求（文件+纯文本）
+     * 用于进行POST请求
      *
-     * @param url
-     * @param params
-     * @param files
-     * @return
+     * @param url    POST请求的URL
+     * @param params POST请求的一系列纯文本
+     * @param files  POST请求的一系列文件
+     * @return 服务端返回的响应信息
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String uploadFiles(String url, Map<String, String> params, Map<String, File> files) {
@@ -63,10 +67,10 @@ public class OkHttpUtil {
     }
 
     /**
-     * GET请求
+     * 用于进行GET请求
      *
-     * @param url
-     * @return
+     * @param url GET请求的URL
+     * @return 服务端返回的响应信息
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public static String getData(String url) {
@@ -83,11 +87,11 @@ public class OkHttpUtil {
     }
 
     /**
-     * POST请求（纯文本）
+     * 用于进行POST请求
      *
-     * @param url
-     * @param params
-     * @return
+     * @param url    POST请求的URL
+     * @param params POST请求的一系列纯文本
+     * @return 服务端返回的响应信息
      */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String submit(String url, Map<String, String> params) {

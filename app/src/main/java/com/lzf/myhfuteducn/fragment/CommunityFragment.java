@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.lzf.myhfuteducn.LogActivity;
 import com.lzf.myhfuteducn.LogDetailActivity;
 import com.lzf.myhfuteducn.R;
 import com.lzf.myhfuteducn.bean.Comment;
+import com.lzf.myhfuteducn.bean.Log;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.ReusableAdapter;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
@@ -43,12 +43,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CommunityFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CommunityFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 社区界面的UI控制层
+ *
+ * @author MJCoder
+ * @see android.support.v4.app.Fragment
  */
 public class CommunityFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -62,22 +60,66 @@ public class CommunityFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    /**
+     * 该Fragment的宿主Activity
+     */
     private FragmentActivity fragmentActivity;
+    /**
+     * 环境/上下文
+     */
     private Context context;
+    /**
+     * 社区界面顶部的搜索框
+     */
     private EditText searchET;
+    /**
+     * 评论控件
+     */
     private RelativeLayout commentRL;
+    /**
+     * 评论控件中的编写框
+     */
     private EditText commentET;
+    /**
+     * 评论的内容文本
+     */
     private String commentETValue;
+    /**
+     * 是否匿名发表的选项框
+     */
     private CheckBox checkBox;
+    /**
+     * 发送按钮
+     */
     private Button commentSend;
+    /**
+     * 用于显示一系列日志的列表视图
+     */
     private ListView logListView;
-    private List<com.lzf.myhfuteducn.bean.Log> logData;
+    /**
+     * logListView的适配器，用于处理一系列日志的列表视图的具体显示内容
+     */
     private ReusableAdapter<com.lzf.myhfuteducn.bean.Log> logReusableAdapter;
+    /**
+     * 从阿里云服务端返回的日志数据列表
+     */
+    private List<com.lzf.myhfuteducn.bean.Log> logData;
+    /**
+     * 该变量用于格式化日期显示
+     */
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM--dd HH:mm");
-
+    /**
+     * 用户点击选中的具体的某个Log日志
+     */
     private com.lzf.myhfuteducn.bean.Log log;
+    /**
+     * 用户点击的该Log日志在列表视图中的位置
+     */
     private int position;
 
+    /**
+     * 社区界面的UI控制层的无参构造方法
+     */
     public CommunityFragment() {
         // Required empty public constructor
     }
@@ -99,6 +141,13 @@ public class CommunityFragment extends Fragment {
     //        fragment.setArguments(args);
     //        return fragment;
     //    }
+
+    /**
+     * 创建Fragment是回调，只会回调一次。
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +157,17 @@ public class CommunityFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 每次创建、绘制该Fragment的View组件时回调，会将显示的View返回
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return 返回社区界面的UI视图
+     * @see LayoutInflater
+     * @see ViewGroup
+     * @see Bundle
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -153,7 +213,7 @@ public class CommunityFragment extends Fragment {
                                     try {
                                         JSONObject responseJsonObject = new JSONObject(response);
                                         if (responseJsonObject.getBoolean("success")) {
-                                            List<com.lzf.myhfuteducn.bean.Log> logData = new Gson().fromJson(responseJsonObject.getJSONArray("data").toString(), new TypeToken<List<com.lzf.myhfuteducn.bean.Log>>() {
+                                            List<com.lzf.myhfuteducn.bean.Log> logData = new Gson().fromJson(responseJsonObject.getJSONArray("data").toString(), new TypeToken<List<Log>>() {
                                             }.getType());
                                             logReusableAdapter.updateAll(logData);
                                         } else {
@@ -248,6 +308,9 @@ public class CommunityFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 恢复Fragment时回调；确保每次进入该界面都进行刷新最新的数据信息
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -279,7 +342,7 @@ public class CommunityFragment extends Fragment {
                                 if (logData != null) {
                                     logData.clear();
                                 }
-                                logData = new Gson().fromJson(responseJsonObject.getJSONArray("data").toString(), new TypeToken<List<com.lzf.myhfuteducn.bean.Log>>() {
+                                logData = new Gson().fromJson(responseJsonObject.getJSONArray("data").toString(), new TypeToken<List<Log>>() {
                                 }.getType());
                                 logReusableAdapter = new ReusableAdapter<com.lzf.myhfuteducn.bean.Log>(logData, R.layout.item_log) {
                                     @Override
@@ -416,12 +479,17 @@ public class CommunityFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        Log.v("onButtonPressed", "" + uri);
+        android.util.Log.v("onButtonPressed", "" + uri);
         //        if (mListener != null) {
         //            mListener.onFragmentInteraction(uri);
         //        }
     }
 
+    /**
+     * 当该Fragment被添加到Activity中会回调，只会被调用一次
+     *
+     * @param context 环境/上下文
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -434,6 +502,9 @@ public class CommunityFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 将该Fragment从Activity中删除/替换后回调该方法（onDestroy()方法后一定回调该方法）；且该方法只会调用一次。
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -456,9 +527,9 @@ public class CommunityFragment extends Fragment {
     //    }
 
     /**
-     * 日志发布前的前端检测
+     * 评论发布前的前端检查：确保所发布的内容真实有效。
      *
-     * @return
+     * @return 检查后的结果（true：该内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
      */
     private boolean commentCheck() {
         boolean valid = true;
@@ -472,6 +543,11 @@ public class CommunityFragment extends Fragment {
         return valid;
     }
 
+    /**
+     * 用户按了返回物理按键后的事件处理。
+     *
+     * @return 是否自定义处理（true：返回事件进行自定义处理，执行自定义的代码；false：返回事件交由系统默认进行响应）
+     */
     public boolean onBackPressed() {
         if (commentRL != null && commentRL.getVisibility() == View.VISIBLE) {
             commentRL.setVisibility(View.GONE);

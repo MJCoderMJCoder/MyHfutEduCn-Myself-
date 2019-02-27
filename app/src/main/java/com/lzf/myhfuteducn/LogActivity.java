@@ -46,21 +46,65 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 发表日志界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ */
 public class LogActivity extends AppCompatActivity {
 
+    /**
+     * 图片选择控件：包含用相机拍照或从相册选择的弹出框
+     */
     private LinearLayout cameraChoose;
+    /**
+     * 发表日志的图片预览视图控件
+     */
     private ImageView logImg;
+    /**
+     * 发表日志的文本编辑框
+     */
     private EditText logTxt;
+    /**
+     * 是否匿名发表的选择框
+     */
     private CheckBox checkBox;
-
-    public final int REQUEST_PERMISSION = 6002; //请求权限
-    public final int LOCAL_PHOTOS = 6003; //选择本地图片
-    public final int PHOTOGRAPH = 6004; //用相机拍照
+    /**
+     * 请求权限的编号代码
+     */
+    public final int REQUEST_PERMISSION = 6002;
+    /**
+     * 选择本地图片的编号代码
+     */
+    public final int LOCAL_PHOTOS = 6003;
+    /**
+     * 用相机拍照的编号代码
+     */
+    public final int PHOTOGRAPH = 6004;
+    /**
+     * 所请求的一系列权限
+     */
     private final String[] PERMISSIONS = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS, Manifest.permission.MEDIA_CONTENT_CONTROL, Manifest.permission.MANAGE_DOCUMENTS, Manifest.permission.INTERNET, Manifest.permission.CAMERA};
-    private File currentImageFile = null; //拍照时的缓存文件
-    private List<String> permissionList = new ArrayList<String>();  // 声明一个集合，在后面的代码中用来存储用户拒绝授权的权
+    /**
+     * 发表日志的图片的缓存文件
+     */
+    private File currentImageFile = null;
+    /**
+     * 声明一个集合，在后面的代码中用来存储用户拒绝授权的一系列权限
+     */
+    private List<String> permissionList = new ArrayList<String>();
+    /**
+     * 发表日志的文本编辑框的文本内容
+     */
     private String logTxtValue = "";
 
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +115,11 @@ public class LogActivity extends AppCompatActivity {
         checkBox = findViewById(R.id.checkBox);
     }
 
+    /**
+     * 用户单击界面上的对应视图控件时进行的响应操作
+     *
+     * @param view 用户单击界面上的对应视图控件
+     */
     public void doClick(View view) {
         //请求存储权限
         permissionIsGranted();
@@ -138,9 +187,9 @@ public class LogActivity extends AppCompatActivity {
     }
 
     /**
-     * 日志发布前的前端检测
+     * 日志发布前的前端检查：确保所发布的内容真实有效。
      *
-     * @return
+     * @return 检查后的结果（true：所发布的内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
      */
     private boolean publishCheck() {
         boolean valid = true;
@@ -159,10 +208,8 @@ public class LogActivity extends AppCompatActivity {
     }
 
     /**
-     * 判断哪些权限未授予以便必要的时候重新申请
-     * 判断存储委授予权限的集合是否为空：未授予的权限为空，表示都授予了
-     *
-     * @return
+     * 判断哪些权限未授予以便在必要的时候重新申请
+     * 判断存储未授予权限的集合permissionList是否为空：未授予的权限为空，表示都授予了
      */
     private void permissionIsGranted() {
         permissionList.clear();
@@ -182,16 +229,15 @@ public class LogActivity extends AppCompatActivity {
             if (!permissionList.isEmpty()) {
                 String[] permissions = new String[permissionList.size()];
                 //请求权限
-                ActivityCompat.requestPermissions(this, permissionList.toArray(permissions),
-                        REQUEST_PERMISSION);
+                ActivityCompat.requestPermissions(this, permissionList.toArray(permissions), REQUEST_PERMISSION);
             }
         }
     }
 
     /**
-     * 分享时的照片选择或是拍照
+     * 发表日志图片时的控件选择：包含用相机拍照或从相册选择。
      *
-     * @param chooseType
+     * @param chooseType 用相机拍照（PHOTOGRAPH）还是从相册选择（LOCAL_PHOTOS）
      */
     private void imageOperation(int chooseType) {
         // 置入一个不设防的VmPolicy：Android 7.0 FileUriExposedException
@@ -297,10 +343,11 @@ public class LogActivity extends AppCompatActivity {
     }
 
     /**
-     * 解决小米手机上获取图片路径为null的情况
+     * 获取小米手机上的图片路径（解决小米手机上获取图片路径为null的情况）
      *
-     * @param intent
-     * @return
+     * @param intent Intent中包含有小米手机上用户选择图片后返回的相关信息（它可以将结果数据返回给调用者；各种数据可以附加到“extra”中)。
+     * @return 小米手机上用户选择的对应的图片路径
+     * @see Intent
      */
     private Uri getXiaoMiUri(Intent intent) {
         Uri uri = intent.getData();
@@ -337,12 +384,20 @@ public class LogActivity extends AppCompatActivity {
         return uri;
     }
 
+    /**
+     * 当LogActivity启动的活动退出时调用，为LogActivity提供启动它的requestCode，返回的resultCode以及来自它的任何其他数据。
+     * 如果活动显式返回，没有返回任何结果，或者在操作期间崩溃，则 resultCode 将为{@link #RESULT_CANCELED}。
+     *
+     * @param requestCode 最初提供给startActivityForResult（）的整数请求代码，允许您识别此结果的来源。（用相机拍照（PHOTOGRAPH）还是从相册选择（LOCAL_PHOTOS））
+     * @param resultCode  LogActivity调用启动的活动退出时返回的标准活动结果（整数结果代码）。
+     * @param data        Intent data中包含有小米手机上用户选择图片后返回的相关信息（它可以将结果数据返回给调用者；各种数据可以附加到“extra”中)。
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.v("requestCode", "" + requestCode);
-        Log.v("resultCode", "" + resultCode);
-        Log.v("data", "" + data);
+        //        Log.v("requestCode", "" + requestCode);
+        //        Log.v("resultCode", "" + resultCode);
+        //        Log.v("data", "" + data);
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (resultCode == Activity.RESULT_OK) {

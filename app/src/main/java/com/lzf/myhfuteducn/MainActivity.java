@@ -37,28 +37,101 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 主界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ * @see android.support.design.widget.NavigationView.OnNavigationItemSelectedListener
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Menu menu;
+    /**
+     * 侧滑菜单
+     */
+    private Menu lateralSpreadsMenu;
+    /**
+     * 主界面顶部的标题
+     */
     private TextView toolbarTitle;
+    /**
+     * Fragment管理器：用于管理主界面中包含的各个子界面间的显示切换
+     */
     private FragmentManager fragmentManager;
-
+    /**
+     * 关于我们界面的UI控制层
+     *
+     * @see AboutFragment
+     */
     private AboutFragment aboutFragment;
+    /**
+     * 查成绩界面的UI控制层
+     *
+     * @see AchievementFragment
+     */
     private AchievementFragment achievementFragment;
+    /**
+     * 清除缓存界面的UI控制层
+     *
+     * @see ClearFragment
+     */
     private ClearFragment clearFragment;
+    /**
+     * 社区界面的UI控制层
+     *
+     * @see CommunityFragment
+     */
     private CommunityFragment communityFragment;
+    /**
+     * 课程表界面的UI控制层
+     *
+     * @see CourseFragment
+     */
     private CourseFragment courseFragment;
+    /**
+     * 信息设置界面的UI控制层
+     *
+     * @see InfosetFragment
+     */
     private InfosetFragment infosetFragment;
+    /**
+     * 课堂签到界面的UI控制层
+     *
+     * @see SignFragment
+     */
     private SignFragment signFragment;
-
-    public static JSONObject semesterWeekList; //所有学期以及按照学期分的周相关信息
-    public static int semesterorder; //学期列表序号
-    public static int semestercode; //学期代码
-    public static String semestername; //学期名称
-    public static int weekIndx; //第几周
+    /**
+     * 所有学期以及按照学期分的周相关信息
+     */
+    public static JSONObject semesterWeekList;
+    /**
+     * 学期列表序号
+     */
+    public static int semesterorder;
+    /**
+     * 学期代码
+     */
+    public static int semestercode;
+    /**
+     * 学期名称
+     */
+    public static String semestername;
+    /**
+     * 第几周
+     */
+    public static int weekIndx;
+    /**
+     * 上次触发返回物理按键的时间戳
+     */
     private long exitTime = 0;
 
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +173,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         fragmentManager = getSupportFragmentManager();
-        menu = navigationView.getMenu();
+        lateralSpreadsMenu = navigationView.getMenu();
 
         getProjectInfo();
         findViewById(R.id.centerContent).setOnTouchListener(new View.OnTouchListener() {
@@ -115,6 +188,9 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * 用户按了返回物理按键后的事件处理。
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -123,10 +199,10 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (communityFragment != null && communityFragment.isVisible()) {
                 if (!communityFragment.onBackPressed()) {
-                    menu.performIdentifierAction(R.id.nav_course, 0);
+                    lateralSpreadsMenu.performIdentifierAction(R.id.nav_course, 0);
                 }
             } else if (courseFragment == null || !courseFragment.isVisible()) {
-                menu.performIdentifierAction(R.id.nav_course, 0);
+                lateralSpreadsMenu.performIdentifierAction(R.id.nav_course, 0);
             } else if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
@@ -136,6 +212,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * 主界面顶部右侧的选项菜单
+     * 初始化Activity的标准选项菜单的内容。 您应该将菜单项放入menu。
+     * 仅在第一次显示选项菜单时调用此选项。 要在每次显示菜单时更新菜单，请参阅{@link #onPrepareOptionsMenu}。
+     * 默认实现使用标准系统菜单项填充菜单。 它们放在{@link Menu＃CATEGORY_SYSTEM}组中，以便使用应用程序定义的菜单项正确排序。 派生类应始终调用基本实现。
+     * 您可以安全地保持menu（以及从中创建的任何项目），根据需要对其进行修改，直到下次调用onCreateOptionsMenu（）。
+     * 向菜单添加项目时，可以实现Activity的{@link #onOptionsItemSelected}方法来处理它们。
+     *
+     * @param menu 放置项目的选项菜单。
+     * @return 您必须返回true才能显示菜单; 如果你返回false，它将不会显示。
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -148,6 +235,14 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * 主界面顶部右侧的选项菜单
+     * 准备要显示的屏幕标准选项菜单。 每次显示菜单时都会调用此菜单。 您可以使用此方法有效地启用/禁用项目或以其他方式动态修改内容。
+     * 默认实现根据活动的状态更新系统菜单项。 派生类应始终调用基类实现。
+     *
+     * @param menu   最后显示的选项菜单或首先由onCreateOptionsMenu（）初始化的选项菜单。
+     * @return 您必须返回true才能显示菜单; 如果你返回false，它将不会显示。
+     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (semesterWeekList != null && menu.size() < 2) {
@@ -157,6 +252,14 @@ public class MainActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
+    /**
+     * 只要选择了选项菜单中的项目，就会调用此方法。 默认实现只返回false以进行正常处理（调用项的Runnable或根据需要向其Handler发送消息）。
+     * 您可以将此方法用于您希望在没有其他设施的情况下进行处理的任何项目。
+     * 派生类应调用基类来执行默认菜单处理。
+     *
+     * @param item 选中的菜单项。
+     * @return boolean返回false以允许正常菜单处理继续，true在此处使用它。
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -174,9 +277,9 @@ public class MainActivity extends AppCompatActivity
             if (courseFragment != null && courseFragment.isVisible()) {
                 JSONArray semesters = semesterWeekList.getJSONArray("semesters");
                 weekIndx = semesters.getJSONObject(semesterorder).getInt("week_start_at");
-                menu.performIdentifierAction(R.id.nav_course, 0);
+                lateralSpreadsMenu.performIdentifierAction(R.id.nav_course, 0);
             } else if (achievementFragment != null && achievementFragment.isVisible()) {
-                menu.performIdentifierAction(R.id.nav_achievement, 0);
+                lateralSpreadsMenu.performIdentifierAction(R.id.nav_achievement, 0);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -184,6 +287,12 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 在选择侧滑导航菜单中的项时调用。
+     *
+     * @param item 所选项目
+     * @return true：将项显示为所选项
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -201,9 +310,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 切换Fragment
+     * 主界面中包含的各个Fragment子界面间的显示切换
      *
-     * @param item
+     * @param item 在点击侧滑导航菜单中的项时所选的项目
      */
     private void switchFragment(MenuItem item) {
         FragmentTransaction fTransaction = fragmentManager.beginTransaction();
@@ -4138,7 +4247,7 @@ public class MainActivity extends AppCompatActivity
                                         semestercode = semesterWeekList.getInt("cur_semester_code");
                                         weekIndx = semesterWeekList.getInt("cur_week_index");
                                         if (courseFragment == null || courseFragment.isVisible()) {
-                                            menu.performIdentifierAction(R.id.nav_course, 0);
+                                            lateralSpreadsMenu.performIdentifierAction(R.id.nav_course, 0);
                                         }
                                         JSONArray semesters = semesterWeekList.getJSONArray("semesters");
                                         for (int i = 0; i < semesters.length(); i++) {
@@ -4167,7 +4276,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * 动态添加菜单
+     * 动态添加主界面顶部右侧的选项菜单
      *
      * @param menu
      */

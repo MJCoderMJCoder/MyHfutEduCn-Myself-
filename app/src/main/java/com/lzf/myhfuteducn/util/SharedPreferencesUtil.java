@@ -6,17 +6,23 @@ import android.content.SharedPreferences;
 import java.util.Map;
 
 /**
- * SharedPreferences保存用户偏好参数
- * Created by MJCoder on 2018-08-01.
+ * SharedPreferences(保存用户偏好参数)保存数据
+ *
+ * @author MJCoder
+ * @see SharedPreferences
  */
 public class SharedPreferencesUtil {
     /**
-     * 保存在手机里的SP文件名
+     * 保存在手机里的 SharedPreferences 文件名
      */
     public static final String FILE_NAME = "SharedPreferencesUtil";
 
     /**
-     * 保存数据
+     * 向SharedPreferences中保存数据
+     *
+     * @param context 环境/上下文
+     * @param key     保存的键
+     * @param obj     保存的值
      */
     public static void put(Context context, String key, Object obj) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);
@@ -35,9 +41,13 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
-
     /**
-     * 获取指定数据
+     * 获取SharedPreferences中指定键的数据
+     *
+     * @param context    环境/上下文
+     * @param key        指定的键
+     * @param defaultObj 默认值
+     * @return
      */
     public static Object get(Context context, String key, Object defaultObj) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);
@@ -56,7 +66,10 @@ public class SharedPreferencesUtil {
     }
 
     /**
-     * 删除指定数据
+     * 删除SharedPreferences中指定键的数据
+     *
+     * @param context 环境/上下文
+     * @param key     指定的键
      */
     public static void remove(Context context, String key) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);
@@ -65,9 +78,11 @@ public class SharedPreferencesUtil {
         editor.commit();
     }
 
-
     /**
-     * 返回所有键值对
+     * 获取SharedPreferences中的所有键值对
+     *
+     * @param context 环境/上下文
+     * @return 所有键值对
      */
     public static Map<String, ?> getAll(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);
@@ -76,7 +91,9 @@ public class SharedPreferencesUtil {
     }
 
     /**
-     * 删除所有数据
+     * 删除SharedPreferences中的所有数据
+     *
+     * @param context 环境/上下文
      */
     public static void clear(Context context) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);
@@ -86,7 +103,11 @@ public class SharedPreferencesUtil {
     }
 
     /**
-     * 检查key对应的数据是否存在
+     * 检查SharedPreferences中指定键对应的数据是否存在
+     *
+     * @param context 环境/上下文
+     * @param key     指定的键
+     * @return 指定键对应的数据是否存在（true：指定键对应的数据已存在；false：指定键对应的数据不存在）
      */
     public static boolean contains(Context context, String key) {
         SharedPreferences sp = context.getSharedPreferences(FILE_NAME, context.MODE_PRIVATE);

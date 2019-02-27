@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,7 +21,6 @@ import android.widget.ViewFlipper;
 
 import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
-import com.lzf.myhfuteducn.bean.Log;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
 import com.lzf.myhfuteducn.util.UrlUtil;
@@ -38,13 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SignFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SignFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 课堂签到界面的UI控制层
+ *
+ * @author MJCoder
+ * @see android.support.v4.app.Fragment
  */
 public class SignFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -57,18 +54,52 @@ public class SignFragment extends Fragment {
     //    private String mParam2;
     //
     //    private OnFragmentInteractionListener mListener;
+    /**
+     * 该Fragment返回的View组件
+     */
     private View view;
+    /**
+     * 课堂签到按钮
+     */
     private Button sign;
+    /**
+     * 该Fragment的宿主Activity
+     */
     private FragmentActivity fragmentActivity;
+    /**
+     * 环境/上下文
+     */
     private Context context;
     //    private JSONObject course;
+    /**
+     * 该时间段即将或是正在上的课堂列表（因为有多课程时间冲突现象）
+     */
     private List<JSONObject> jsonObjectList = new ArrayList<JSONObject>();
+    /**
+     * 该变量用于格式化日期用来进行比较
+     */
     private SimpleDateFormat sdfYyyyMMdd = new SimpleDateFormat("yyyyMMdd");
+    /**
+     * 该变量用于格式化时间用来进行比较
+     */
     private SimpleDateFormat sdfHHmm = new SimpleDateFormat("HHmm");
+    /**
+     * 课堂签到界面顶部的课堂信息展示（可左右滑动看同一时间段更多课堂信息）
+     */
     private ViewFlipper viewFlipper;
-    private final static int MIN_MOVE = 200;   //最小距离
+    /**
+     * 用来判断当用户滑动的距离大于该常量时执行viewFlipper翻页
+     * 滑动翻页触发所需的最小滑动距离
+     */
+    private final static int MIN_MOVE = 200;
+    /**
+     * 用户按下时的X轴坐标值
+     */
     private float actionDownX = 0;
 
+    /**
+     * 课堂签到界面的UI控制层的无参构造方法
+     */
     public SignFragment() {
         // Required empty public constructor
     }
@@ -90,6 +121,13 @@ public class SignFragment extends Fragment {
     //        fragment.setArguments(args);
     //        return fragment;
     //    }
+
+    /**
+     * 创建Fragment时回调，只会回调一次。
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +137,17 @@ public class SignFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 每次创建、绘制该Fragment的View组件时回调，会将显示的View返回
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return 返回课程表界面的UI视图
+     * @see LayoutInflater
+     * @see ViewGroup
+     * @see Bundle
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -141,6 +190,13 @@ public class SignFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 课堂签到界面的触摸事件监听：当左右滑动时viewFlipper（课堂签到界面顶部的课堂信息展示）进行翻页，显示多课程冲突时的其他课程信息。
+     *
+     * @param event 用户的手势事件
+     * @return 是否自定义处理（true：触摸事件进行自定义处理，执行自定义的代码；false：触摸事件交由系统默认进行响应）
+     * @see MotionEvent
+     */
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -170,6 +226,11 @@ public class SignFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 当该Fragment被添加到Activity中会回调，只会被调用一次
+     *
+     * @param context 环境/上下文
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -182,6 +243,9 @@ public class SignFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 将该Fragment从Activity中删除/替换后回调该方法（onDestroy()方法后一定回调该方法）；且该方法只会调用一次。
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -205,10 +269,10 @@ public class SignFragment extends Fragment {
 
 
     /**
-     * 获取一周的课程表并绘制
+     * 获取一周的课程表并绘制课堂签到界面
      *
-     * @param semestercode
-     * @param weekIndx
+     * @param semestercode 当前时间所处的（教务系统返回的）学期的代码编号
+     * @param weekIndx     当前时间所处的（教务系统返回的）学期里的对应周的代码编号
      */
     private void getWeekSchedule(final String semestercode, final String weekIndx) {
         new Thread() {
@@ -576,9 +640,11 @@ public class SignFragment extends Fragment {
     }
 
     /**
-     * 签到课程录取
+     * 当前时间段需要进行签到的所有课程信息录入（需要进行签到的所有课程录入jsonObjectList变量中）
      *
-     * @throws JSONException
+     * @param time   当前时间格式化后的值
+     * @param course 当前时间段需要进行签到的课程
+     * @throws JSONException JSON解析或是处理异常
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void signCourseInput(int time, JSONObject course) throws JSONException {
@@ -596,12 +662,12 @@ public class SignFragment extends Fragment {
     }
 
     /**
-     * 签到按钮绘制
-     * <p>
+     * 签到按钮绘制并在必要时添加单击响应事件；在顶部viewFlipper中添加（即将或是正在上的）课堂信息子视图。
      *
-     * @param semestercode
-     * @param weekIndx
-     * @throws JSONException
+     * @param time         当前时间格式化后的值
+     * @param semestercode 当前时间所处的（教务系统返回的）学期的代码编号
+     * @param weekIndx     当前时间所处的（教务系统返回的）学期里的对应周的代码编号
+     * @throws JSONException JSON解析或是处理异常
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void signDraw(int time, final String semestercode, final String weekIndx) throws JSONException {

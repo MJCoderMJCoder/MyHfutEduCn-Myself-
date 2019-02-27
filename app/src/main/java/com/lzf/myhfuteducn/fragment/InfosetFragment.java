@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzf.myhfuteducn.MainActivity;
 import com.lzf.myhfuteducn.R;
 import com.lzf.myhfuteducn.util.OkHttpUtil;
 import com.lzf.myhfuteducn.util.SharedPreferencesUtil;
@@ -31,12 +30,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link InfosetFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link InfosetFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 信息设置界面的UI控制层
+ *
+ * @author MJCoder
+ * @see android.support.v4.app.Fragment
  */
 public class InfosetFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -50,14 +47,38 @@ public class InfosetFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    /**
+     * 该Fragment的宿主Activity
+     */
     private FragmentActivity fragmentActivity;
+    /**
+     * 环境/上下文
+     */
     private Context context;
+    /**
+     * 该Fragment返回的View组件
+     */
     private View view;
+    /**
+     * 邮箱输入框（用于修改手机邮箱）
+     */
     private EditText account_email;
+    /**
+     * 手机输入框（用于修改手机邮箱）
+     */
     private EditText mobile_phone;
+    /**
+     * 邮箱输入框当前的文本内容
+     */
     private String accountEmail;
+    /**
+     * 手机输入框当前的文本内容
+     */
     private String mobilePhone;
 
+    /**
+     * 信息设置界面的UI控制层的无参构造方法
+     */
     public InfosetFragment() {
         // Required empty public constructor
     }
@@ -79,6 +100,13 @@ public class InfosetFragment extends Fragment {
     //        fragment.setArguments(args);
     //        return fragment;
     //    }
+
+    /**
+     * 创建Fragment时回调，只会回调一次。
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +116,17 @@ public class InfosetFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 每次创建、绘制该Fragment的View组件时回调，会将显示的View返回
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return 返回课程表界面的UI视图
+     * @see LayoutInflater
+     * @see ViewGroup
+     * @see Bundle
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -192,6 +231,11 @@ public class InfosetFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 当该Fragment被添加到Activity中会回调，只会被调用一次
+     *
+     * @param context 环境/上下文
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -204,6 +248,9 @@ public class InfosetFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 将该Fragment从Activity中删除/替换后回调该方法（onDestroy()方法后一定回调该方法）；且该方法只会调用一次。
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -224,6 +271,12 @@ public class InfosetFragment extends Fragment {
     //        // TODO: Update argument type and name
     //        void onFragmentInteraction(Uri uri);
     //    }
+
+    /**
+     * 修改手机邮箱提交前的前端检查：确保所填写的内容真实有效。
+     *
+     * @return 检查后的结果（true：所填写的内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
+     */
     private boolean submitCheck() {
         boolean valid = true;
         accountEmail = account_email.getText().toString();
@@ -246,7 +299,10 @@ public class InfosetFragment extends Fragment {
 
 
     /**
-     * 判断格式是否为email
+     * 判断邮箱格式是否正确
+     *
+     * @param email 邮箱输入框当前的文本内容
+     * @return 邮箱格式是否正确（true：该邮箱格式合法可以提交；false：该邮箱格式不正确，需重新编辑）
      */
     public static boolean isEmail(String email) {
         String str = "^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";

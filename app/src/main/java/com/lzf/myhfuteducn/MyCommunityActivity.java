@@ -35,22 +35,68 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 我的社区界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ */
 public class MyCommunityActivity extends AppCompatActivity {
-
+    /**
+     * 搜索文本输入框
+     */
     private EditText searchET;
+    /**
+     * 评论控件
+     */
     private RelativeLayout commentRL;
+    /**
+     * 评论的文本编辑框
+     */
     private EditText commentET;
+    /**
+     * 评论的文本编辑框的文本内容
+     */
     private String commentETValue;
+    /**
+     * 是否匿名评论的选项框
+     */
     private CheckBox checkBox;
+    /**
+     * 发表评论按钮
+     */
     private Button commentSend;
+    /**
+     * 用于显示一系列日志的列表视图
+     */
     private ListView logListView;
+    /**
+     * 从阿里云服务端返回的日志数据列表
+     */
     private List<com.lzf.myhfuteducn.bean.Log> logData;
+    /**
+     * logListView的适配器，用于处理一系列日志的列表视图的具体显示内容
+     */
     private ReusableAdapter<Log> logReusableAdapter;
+    /**
+     * 该变量用于格式化日期显示
+     */
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM--dd HH:mm");
-
+    /**
+     * 用户点击选中的具体的某个Log日志
+     */
     private com.lzf.myhfuteducn.bean.Log log;
+    /**
+     * 用户点击的该Log日志在列表视图中的位置
+     */
     private int position;
 
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,6 +222,9 @@ public class MyCommunityActivity extends AppCompatActivity {
         logListView = findViewById(R.id.logListView);
     }
 
+    /**
+     * 恢复Activity时回调；确保每次进入该界面都进行刷新最新的数据信息
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -326,7 +375,11 @@ public class MyCommunityActivity extends AppCompatActivity {
         }.start();
     }
 
-
+    /**
+     * 用户单击界面上的对应视图控件时进行的响应操作
+     *
+     * @param view 用户单击界面上的对应视图控件
+     */
     public void doClick(View view) {
         switch (view.getId()) {
             case R.id.backBtn:
@@ -337,11 +390,10 @@ public class MyCommunityActivity extends AppCompatActivity {
         }
     }
 
-
     /**
-     * 日志发布前的前端检测
+     * 评论发布前的前端检查：确保所发布的内容真实有效。
      *
-     * @return
+     * @return 检查后的结果（true：所发布的内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
      */
     private boolean commentCheck() {
         boolean valid = true;
@@ -355,6 +407,9 @@ public class MyCommunityActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     * 用户按了返回物理按键后的事件处理。
+     */
     @Override
     public void onBackPressed() {
         if (commentRL.getVisibility() == View.VISIBLE) {

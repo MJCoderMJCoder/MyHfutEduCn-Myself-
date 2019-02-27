@@ -39,12 +39,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CourseFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CourseFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 课程表界面的UI控制层
+ *
+ * @author MJCoder
+ * @see android.support.v4.app.Fragment
  */
 @SuppressLint("ValidFragment")
 public class CourseFragment extends Fragment {
@@ -58,11 +56,22 @@ public class CourseFragment extends Fragment {
     //    private String mParam2;
 
     //    private OnFragmentInteractionListener mListener;
-
+    /**
+     * 该Fragment的宿主Activity
+     */
     private FragmentActivity fragmentActivity;
+    /**
+     * 环境/上下文
+     */
     private Context context;
+    /**
+     * 该Fragment返回的View组件
+     */
     private View view;
 
+    /**
+     * 课程表界面的UI控制层的无参构造方法
+     */
     public CourseFragment() {
     }
 
@@ -83,6 +92,12 @@ public class CourseFragment extends Fragment {
     //        fragment.setArguments(args);
     //        return fragment;
     //    }
+
+    /**
+     * 当该Fragment被添加到Activity中会回调，只会被调用一次
+     *
+     * @param context 环境/上下文
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -95,6 +110,12 @@ public class CourseFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 创建Fragment时回调，只会回调一次。
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +125,17 @@ public class CourseFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 每次创建、绘制该Fragment的View组件时回调，会将显示的View返回
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return 返回课程表界面的UI视图
+     * @see LayoutInflater
+     * @see ViewGroup
+     * @see Bundle
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -170,7 +202,9 @@ public class CourseFragment extends Fragment {
         //        }
     }
 
-
+    /**
+     * 将该Fragment从Activity中删除/替换后回调该方法（onDestroy()方法后一定回调该方法）；且该方法只会调用一次。
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -195,8 +229,8 @@ public class CourseFragment extends Fragment {
     /**
      * 获取一周的课程表并绘制
      *
-     * @param semestercode
-     * @param weekIndx
+     * @param semestercode 教务系统返回的学期的代码编号
+     * @param weekIndx     教务系统返回的学期里的某周的代码编号
      */
     private void getWeekSchedule(final String semestercode, final String weekIndx) {
         new Thread() {
@@ -644,9 +678,9 @@ public class CourseFragment extends Fragment {
     /**
      * 课程详情对话框
      *
-     * @param course_card
-     * @param jsonObjectList
-     * @throws JSONException
+     * @param course_card    用户点击的那个课程卡片视图
+     * @param jsonObjectList 某个课程的详情信息
+     * @throws JSONException JSON解析或是处理异常
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void courseDetailDialog(View course_card, List<JSONObject> jsonObjectList) throws JSONException {

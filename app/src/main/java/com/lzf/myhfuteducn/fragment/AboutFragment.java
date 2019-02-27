@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import com.lzf.myhfuteducn.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link AboutFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AboutFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * 关于我们界面的UI控制层
+ *
+ * @author MJCoder
+ * @see android.support.v4.app.Fragment
  */
 public class AboutFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -30,6 +28,9 @@ public class AboutFragment extends Fragment {
 
     //    private OnFragmentInteractionListener mListener;
 
+    /**
+     * 关于我们界面的UI控制层的无参构造方法
+     */
     public AboutFragment() {
         // Required empty public constructor
     }
@@ -51,6 +52,13 @@ public class AboutFragment extends Fragment {
     //        fragment.setArguments(args);
     //        return fragment;
     //    }
+
+    /**
+     * 创建Fragment时回调，只会回调一次。
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +68,17 @@ public class AboutFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 每次创建、绘制该Fragment的View组件时回调，会将显示的View返回
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return 返回关于我们的界面视图
+     * @see LayoutInflater
+     * @see ViewGroup
+     * @see Bundle
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -74,6 +93,11 @@ public class AboutFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 当该Fragment被添加到Activity中会回调，只会被调用一次
+     *
+     * @param context 环境/上下文
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -85,6 +109,9 @@ public class AboutFragment extends Fragment {
         //        }
     }
 
+    /**
+     * 将该Fragment从Activity中删除/替换后回调该方法（onDestroy()方法后一定回调该方法）；且该方法只会调用一次。
+     */
     @Override
     public void onDetach() {
         super.onDetach();

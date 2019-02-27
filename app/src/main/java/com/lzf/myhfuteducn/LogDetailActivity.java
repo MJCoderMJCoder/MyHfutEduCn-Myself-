@@ -38,15 +38,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 日志详情界面的UI控制层
+ *
+ * @author MJCoder
+ * @see AppCompatActivity
+ */
 public class LogDetailActivity extends AppCompatActivity {
 
+    /**
+     * 评论的文本编辑框
+     */
     private EditText commentET;
+    /**
+     * 评论的文本编辑框的文本内容
+     */
     private String commentETValue;
+    /**
+     * 是否匿名评论的选项框
+     */
     private CheckBox checkBox;
+    /**
+     * 发表评论按钮
+     */
     private Button commentSend;
 
+    /**
+     * 该变量用于格式化日期时间显示
+     */
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM--dd HH:mm");
 
+    /**
+     * Activity首次被创建时会调用该方法
+     *
+     * @param savedInstanceState
+     * @see Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +206,11 @@ public class LogDetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 用户单击界面上的对应视图控件时进行的响应操作
+     *
+     * @param view 用户单击界面上的对应视图控件
+     */
     public void doClick(View view) {
         switch (view.getId()) {
             case R.id.backBtn:
@@ -189,7 +221,12 @@ public class LogDetailActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * 动态添加日志的评论子视图
+     *
+     * @param commentLL   用于放置日志的评论的父=视图
+     * @param commentList 该日志的所有评论
+     */
     private void dynamicAddComment(LinearLayout commentLL, List<Comment> commentList) {
         try {
             commentLL.removeAllViews();
@@ -227,9 +264,9 @@ public class LogDetailActivity extends AppCompatActivity {
     }
 
     /**
-     * 日志发布前的前端检测
+     * 评论发布前的前端检查：确保所发布的内容真实有效。
      *
-     * @return
+     * @return 检查后的结果（true：所发布的内容真实有效可以提交；false：内容缺失或是不合法，需重新编辑）
      */
     private boolean commentCheck() {
         boolean valid = true;
@@ -243,6 +280,14 @@ public class LogDetailActivity extends AppCompatActivity {
         return valid;
     }
 
+    /**
+     * 日志详情中与用户相关的详情信息对话框：用于显示用户的详细信息
+     *
+     * @param trigger 触发器：触发对话框显示的视图组件
+     * @param object  Log{@link Log}对象或是Comment{@link Comment}对象里面包含用户的详细信息
+     * @see Log
+     * @see Comment
+     */
     private void infoDetailDialog(TextView trigger, Object object) {
         //初始化Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
