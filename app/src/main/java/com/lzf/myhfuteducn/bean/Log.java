@@ -394,6 +394,11 @@ public class Log implements Serializable {
         this.comments = comments;
     }
 
+    /**
+     * 返回对象的字符串表示形式。 通常，{@code toString}方法返回一个“文本表示”此对象的字符串。 结果应该是一个简洁但信息丰富的表示，便于人们阅读。
+     *
+     * @return 对象的字符串表示
+     */
     @Override
     public String toString() {
         return "Log [logId=" + logId + ", logTime=" + logTime + ", logImg=" + logImg + ", logTxt=" + logTxt + ", logPraise=" + logPraise + ", logUserName=" + logUserName

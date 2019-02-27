@@ -263,10 +263,20 @@ public class Comment implements Serializable {
         this.commentUserEmail = commentUserEmail;
     }
 
+    /**
+     * 获取发表该评论的用户的性别
+     *
+     * @return 发表该评论的用户的性别
+     */
     public String getCommentUserGender() {
         return commentUserGender;
     }
 
+    /**
+     * 设置发表该评论的用户的性别
+     *
+     * @param commentUserGender 发表该评论的用户的性别
+     */
     public void setCommentUserGender(String commentUserGender) {
         this.commentUserGender = commentUserGender;
     }
@@ -425,6 +435,11 @@ public class Comment implements Serializable {
         this.replyUserClass = replyUserClass;
     }
 
+    /**
+     * 返回对象的字符串表示形式。 通常，{@code toString}方法返回一个“文本表示”此对象的字符串。 结果应该是一个简洁但信息丰富的表示，便于人们阅读。
+     *
+     * @return 对象的字符串表示
+     */
     @Override
     public String toString() {
         return "Comment [commentId=" + commentId + ", commentTime=" + commentTime + ", commentTxt=" + commentTxt + ", commentLog=" + commentLog + ", commentUserName="
