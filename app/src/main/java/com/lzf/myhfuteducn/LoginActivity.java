@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if (objJson != null) {
                                                 JSONObject businessDataJson = objJson.getJSONObject("business_data");
                                                 if (businessDataJson != null) {
+                                                    SharedPreferencesUtil.clear(LoginActivity.this);
                                                     SharedPreferencesUtil.put(LoginActivity.this, "salt", responseJson.getString("salt"));
                                                     SharedPreferencesUtil.put(LoginActivity.this, "token", responseJson.getString("token"));
 
