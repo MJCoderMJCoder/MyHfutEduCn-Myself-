@@ -222,7 +222,7 @@ public class LogActivity extends AppCompatActivity {
                     // Should we show an explanation?
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                             permission)) {
-                        Toast.makeText(this, "MyHfutEduCn获取权限失败，请在“设置”-“应用权限”-打开所需权限", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "E-Learn：获取权限失败，请在“设置”-“应用权限”-打开所需权限", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -249,7 +249,7 @@ public class LogActivity extends AppCompatActivity {
             case PHOTOGRAPH:
                 try {
                     if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                        File dir = new File(Environment.getExternalStorageDirectory(), "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                        File dir = new File(Environment.getExternalStorageDirectory(), "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
@@ -296,7 +296,7 @@ public class LogActivity extends AppCompatActivity {
                         } catch (InvocationTargetException e) {
                             e.printStackTrace();
                         }
-                        File dir = new File(dirTemp, "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                        File dir = new File(dirTemp, "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                         if (!dir.exists()) {
                             dir.mkdirs();
                         }
@@ -406,7 +406,7 @@ public class LogActivity extends AppCompatActivity {
                     case PHOTOGRAPH:
                         if (currentImageFile == null) { //部分机型（vivo v3）返回时会清除currentImageFile所占的内存空间。（重新走MyApplication导致）
                             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                                File dir = new File(Environment.getExternalStorageDirectory(), "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                                File dir = new File(Environment.getExternalStorageDirectory(), "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                                 if (!dir.exists()) {
                                     dir.mkdirs();
                                 }
@@ -445,7 +445,7 @@ public class LogActivity extends AppCompatActivity {
                                 } catch (InvocationTargetException e) {
                                     e.printStackTrace();
                                 }
-                                File dir = new File(dirTemp, "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                                File dir = new File(dirTemp, "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                                 if (!dir.exists()) {
                                     dir.mkdirs();
                                 }
@@ -474,7 +474,7 @@ public class LogActivity extends AppCompatActivity {
                         File tempFile = new File(cursor.getString(columnIndex)); // 获取照片路径
                         cursor.close();
                         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                            File dir = new File(Environment.getExternalStorageDirectory(), "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                            File dir = new File(Environment.getExternalStorageDirectory(), "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                             if (!dir.exists()) {
                                 dir.mkdirs();
                             }
@@ -518,7 +518,7 @@ public class LogActivity extends AppCompatActivity {
                             } catch (InvocationTargetException e) {
                                 e.printStackTrace();
                             }
-                            File dir = new File(dirTemp, "MyHfutEduCn/.camera"); //MyHfutEduCn/.camera
+                            File dir = new File(dirTemp, "MJCoder/MyHfutEduCn/.camera"); //MJCoder/MyHfutEduCn/.camera
                             if (!dir.exists()) {
                                 dir.mkdirs();
                             }
