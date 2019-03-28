@@ -86,7 +86,7 @@
                         android:layout_toRightOf="@id/version"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Version 1.1.6003\nCopyright ©2019 版权"
+                        android:text="Version 1.1.6003"
                         android:textColor="@android:color/black"/>
 
                 </RelativeLayout>
@@ -101,7 +101,7 @@
             android:alpha="0.3"
             android:gravity="center"
             android:padding="5dp"
-            android:text="再次感谢：zwx19980125@qq.com(562872918)"
+            android:text="Thanks：zwx19980125@qq.com(562872918)"
             android:textSize="8sp"/>
     </RelativeLayout>
 </FrameLayout>
