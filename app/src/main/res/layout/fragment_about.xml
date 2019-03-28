@@ -18,7 +18,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:background="@mipmap/atlantis"/>
+                android:background="@mipmap/ic_launcher"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Atlantis."
+                    android:text="特此鸣谢"
                     android:textColor="@android:color/black"
                     android:textSize="25sp"/>
 
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="凛冬已至。"/>
+                    android:text="Atlantis.的各种支持"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -54,16 +54,17 @@
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="账号"/>
+                        android:text="联系我们"/>
 
                     <TextView
                         android:id="@+id/accountValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:layout_toRightOf="@id/account"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="zwx19980125@qq.com（562872918 ）"
+                        android:text="598157378@qq.com"
                         android:textColor="@android:color/black"/>
 
                     <TextView
@@ -74,17 +75,18 @@
                         android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="版本"/>
+                        android:text="当前版本"/>
 
                     <TextView
                         android:id="@+id/versionValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
                         android:layout_below="@id/account"
                         android:layout_toRightOf="@id/version"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="Version 1.1.0 （ Copyright ©2019 版权)"
+                        android:text="Version 1.1.6003\nCopyright ©2019 版权"
                         android:textColor="@android:color/black"/>
 
                 </RelativeLayout>
@@ -96,10 +98,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:alpha="0.5"
+            android:alpha="0.3"
             android:gravity="center"
             android:padding="5dp"
-            android:text="纸纷飞（598157378@qq.com）"
+            android:text="再次感谢：zwx19980125@qq.com(562872918)"
             android:textSize="8sp"/>
     </RelativeLayout>
 </FrameLayout>
